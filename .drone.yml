@@ -1,0 +1,8 @@
+pipeline:
+  validate:
+    image: quay.io/ukhomeofficedigital/terraform-toolset:v0.2.7
+    commands:
+    - /acp/scripts/tf-validate.sh
+    when:
+      event: [pull_request, push]
+      
