@@ -46,3 +46,34 @@ variable "client_broker" {
   description = "Encryption setting for data in transit between clients and brokers. Valid values: TLS, TLS_PLAINTEXT, and PLAINTEXT"
   default     = "TLS_PLAINTEXT"
 }
+
+variable "config_name" {
+  description = "Name of the MSK configuration to attach to the MSK cluster"
+  default     = ""
+}
+
+variable "config_kafka_versions" {
+  description = "A list of Kafka versions that the configuration supports"
+  default     = []
+}
+
+variable "config_server_properties" {
+  description = "The properties to set on the MSK cluster. Omitted properties are set to a default value"
+  default     = ""
+}
+
+variable "config_description" {
+  description = "The description of the MSK configuration"
+  default     = ""
+}
+
+variable "config_revision" {
+  description = "The revision of the MSK configuration to use"
+  default     = ""
+}
+
+# to be used if a configuration exists already
+variable "config_arn" {
+  description = "ARN of the MSK configuration to attach to the MSK cluster"
+  default     = ""
+}
