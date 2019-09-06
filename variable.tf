@@ -29,7 +29,7 @@ variable "vpc_id" {
 
 variable "subnet_ids" {
   description = "The msk cluster subnet ID"
-  type        = "list"
+  type        = list(string)
 }
 
 variable "tags" {
