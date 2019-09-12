@@ -29,7 +29,7 @@ variable "vpc_id" {
 
 variable "subnet_ids" {
   description = "The msk cluster subnet ID"
-  type        = "list"
+  type        = list(string)
 }
 
 variable "cidr_blocks" {
@@ -94,6 +94,7 @@ variable "config_arn" {
 
 variable "iam_user_policy_name" {
   description = "The policy name of attached to the user"
+  default     = ""
 }
 
 variable "policy" {
@@ -110,3 +111,4 @@ variable "type" {
   description = "A map of tags to add to all resources"
   default     = ""
 }
+

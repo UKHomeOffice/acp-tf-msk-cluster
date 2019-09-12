@@ -23,7 +23,7 @@ data "aws_iam_policy_document" "kms_key_policy_document" {
 
 #for the msk cluster without custom config
 data "aws_iam_policy_document" "acmpca_policy_document_with_msk_only" {
-  count = "${length(var.acmpca_iam_user_name) != 0 && var.config_name == "" && var.config_arn == "" ? 1 : 0}"
+  count = length(var.acmpca_iam_user_name) != 0 && var.config_name == "" && var.config_arn == "" ? 1 : 0
 
   policy_id = "${var.acmpca_iam_user_name}acmpcaPolicy"
 
@@ -32,7 +32,7 @@ data "aws_iam_policy_document" "acmpca_policy_document_with_msk_only" {
     effect = "Allow"
 
     resources = [
-      "${aws_acmpca_certificate_authority.msk_kafka_with_ca.arn}",
+      aws_acmpca_certificate_authority.msk_kafka_with_ca[0].arn,
     ]
 
     actions = [
@@ -44,7 +44,7 @@ data "aws_iam_policy_document" "acmpca_policy_document_with_msk_only" {
 
 #for the msk cluster with custom config
 data "aws_iam_policy_document" "acmpca_policy_document_with_msk_config" {
-  count = "${length(var.acmpca_iam_user_name) != 0 && var.config_name != "" || var.config_arn != "" ? 1 : 0}"
+  count = length(var.acmpca_iam_user_name) != 0 && var.config_name != "" || var.config_arn != "" ? 1 : 0
 
   policy_id = "${var.acmpca_iam_user_name}acmpcaPolicy"
 
@@ -53,7 +53,7 @@ data "aws_iam_policy_document" "acmpca_policy_document_with_msk_config" {
     effect = "Allow"
 
     resources = [
-      "${aws_acmpca_certificate_authority.msk_kafka_ca_with_config.arn}",
+      aws_acmpca_certificate_authority.msk_kafka_ca_with_config[0].arn,
     ]
 
     actions = [
@@ -62,3 +62,4 @@ data "aws_iam_policy_document" "acmpca_policy_document_with_msk_config" {
     ]
   }
 }
+
