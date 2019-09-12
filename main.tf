@@ -41,6 +41,10 @@
 *
  */
 
+locals {
+  aws_acmpca_certificate_authority_arn = "${coalesce(element(concat(aws_acmpca_certificate_authority.msk_kafka_with_ca.*.arn, list("")), 0), element(concat(aws_acmpca_certificate_authority.msk_kafka_ca_with_config.*.arn, list("")), 0))}"
+}
+
 data "aws_caller_identity" "current" {}
 
 resource "aws_security_group" "sg_msk" {
@@ -91,7 +95,7 @@ resource "aws_kms_alias" "msk_cluster_kms_alias" {
 }
 
 resource "aws_msk_cluster" "msk_kafka" {
-  count = "${var.config_name == "" && var.config_arn == ""  ? 1 : 0}"
+  count = "${var.config_name == "" && var.config_arn == "" ? 1 : 0}"
 
   cluster_name           = "${var.name}"
   kafka_version          = "${var.kafka_version}"
@@ -102,6 +106,12 @@ resource "aws_msk_cluster" "msk_kafka" {
     ebs_volume_size = "${var.ebs_volume_size}"
     client_subnets  = ["${var.subnet_ids}"]
     security_groups = ["${aws_security_group.sg_msk.id}"]
+  }
+
+  client_authentication {
+    tls {
+      certificate_authority_arns = ["${aws_acmpca_certificate_authority.msk_kafka_with_ca.arn}"]
+    }
   }
 
   encryption_info {
@@ -116,7 +126,7 @@ resource "aws_msk_cluster" "msk_kafka" {
 }
 
 resource "aws_msk_cluster" "msk_kafka_with_config" {
-  count = "${var.config_name != "" || var.config_arn != ""  ? 1 : 0}"
+  count = "${var.config_name != "" || var.config_arn != "" ? 1 : 0}"
 
   cluster_name           = "${var.name}"
   kafka_version          = "${var.kafka_version}"
@@ -127,6 +137,12 @@ resource "aws_msk_cluster" "msk_kafka_with_config" {
     ebs_volume_size = "${var.ebs_volume_size}"
     client_subnets  = ["${var.subnet_ids}"]
     security_groups = ["${aws_security_group.sg_msk.id}"]
+  }
+
+  client_authentication {
+    tls {
+      certificate_authority_arns = ["${aws_acmpca_certificate_authority.msk_kafka_ca_with_config.arn}"]
+    }
   }
 
   encryption_info {
@@ -153,4 +169,78 @@ resource "aws_msk_configuration" "msk_kafka_config" {
   description    = "${var.config_description}"
 
   server_properties = "${var.config_server_properties}"
+}
+
+# creates CA for msk Cluster without custom config
+resource "aws_acmpca_certificate_authority" "msk_kafka_with_ca" {
+  count = "${var.certificateauthority == "true" && var.config_name == "" && var.config_arn == "" ? 1 : 0}"
+
+  certificate_authority_configuration {
+    key_algorithm     = "RSA_4096"
+    signing_algorithm = "SHA512WITHRSA"
+
+    subject {
+      common_name = "${var.name}"
+
+      # add other subjects in this module
+    }
+  }
+
+  type                            = "${var.type}"
+  permanent_deletion_time_in_days = 7
+  tags                            = "${merge(var.tags, map("Name", format("%s-%s", var.environment, var.name)), map("Env", var.environment))}"
+}
+
+# CA for msk Cluster with custom config
+
+resource "aws_acmpca_certificate_authority" "msk_kafka_ca_with_config" {
+  count = "${var.certificateauthority == "true" && var.config_name != "" || var.config_arn != "" ? 1 : 0}"
+
+  certificate_authority_configuration {
+    key_algorithm     = "RSA_4096"
+    signing_algorithm = "SHA512WITHRSA"
+
+    subject {
+      common_name = "${var.name}"
+    }
+  }
+
+  type                            = "${var.type}"
+  permanent_deletion_time_in_days = 7
+  tags                            = "${merge(var.tags, map("Name", format("%s-%s", var.environment, var.name)), map("Env", var.environment))}"
+}
+
+resource "aws_iam_user" "msk_acmpca_iam_user" {
+  count = "${var.certificateauthority == "true" ? 1 : 0}"
+  name  = "${var.name}-acmpca-user"
+  path  = "/"
+}
+
+#policy attachment for default policy
+resource "aws_iam_policy" "acmpca_policy_with_msk_policy" {
+  count = "${var.certificateauthority == "true" ? 1 : 0}"
+  name  = "${var.name}-acmpcaPolicy"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "IAMacmpcaPermissions",
+      "Effect": "Allow",
+      "Action": [
+        "acm-pca:IssueCertificate",
+        "acm-pca:GetCertificate"
+      ],
+      "Resource": "${local.aws_acmpca_certificate_authority_arn}"
+    }
+  ]
+}
+EOF
+}
+
+resource aws_iam_policy_attachment "msk_acmpca_iam_policy_attachment" {
+  name       = "${var.name}-acmpcaPolicy-attachment"
+  users      = ["${aws_iam_user.msk_acmpca_iam_user.name}"]
+  policy_arn = "${aws_iam_policy.acmpca_policy_with_msk_policy.arn}"
 }
