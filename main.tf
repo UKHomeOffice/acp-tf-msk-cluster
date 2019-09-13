@@ -238,3 +238,9 @@ resource "aws_iam_policy" "acmpca_policy_with_msk_policy" {
 }
 EOF
 }
+
+resource aws_iam_policy_attachment "msk_acmpca_iam_policy_attachment" {
+  name       = "${var.name}-acmpcaPolicy-attachment"
+  users      = ["${aws_iam_user.msk_acmpca_iam_user.name}"]
+  policy_arn = "${aws_iam_policy.acmpca_policy_with_msk_policy.arn}"
+}
