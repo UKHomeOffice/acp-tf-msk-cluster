@@ -54,6 +54,7 @@ Module usage:
 | config\_revision | The revision of the MSK configuration to use | string | `""` | no |
 | config\_server\_properties | The properties to set on the MSK cluster. Omitted properties are set to a default value | string | `""` | no |
 | ebs\_volume\_size | The msk custer EBS volume size | string | n/a | yes |
+| enhanced\_monitoring | The desired enhanced MSK CloudWatch monitoring level | string | `"DEFAULT"` | no |
 | environment | The environment the msk cluster is running in i.e. dev, prod etc | string | n/a | yes |
 | iam\_user\_policy\_name | The policy name of attached to the user | string | `""` | no |
 | kafka\_version | The kafka version for the AWS MSK cluster | string | `"2.2.1"` | no |

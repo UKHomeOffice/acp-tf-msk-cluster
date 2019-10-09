@@ -43,6 +43,8 @@
 
 locals {
   aws_acmpca_certificate_authority_arn = "${coalesce(element(concat(aws_acmpca_certificate_authority.msk_kafka_with_ca.*.arn, list("")), 0), element(concat(aws_acmpca_certificate_authority.msk_kafka_ca_with_config.*.arn, list("")), 0))}"
+
+  msk_cluster_arn = "${coalesce(element(concat(aws_msk_cluster.msk_kafka.*.arn, list("")), 0), element(concat(aws_msk_cluster.msk_kafka_with_config.*.arn, list("")), 0))}"
 }
 
 data "aws_caller_identity" "current" {}
@@ -100,6 +102,7 @@ resource "aws_msk_cluster" "msk_kafka" {
   cluster_name           = "${var.name}"
   kafka_version          = "${var.kafka_version}"
   number_of_broker_nodes = "${var.number_of_broker_nodes}"
+  enhanced_monitoring    = "${var.enhanced_monitoring}"
 
   broker_node_group_info {
     instance_type   = "${var.msk_instance_type}"
@@ -131,6 +134,7 @@ resource "aws_msk_cluster" "msk_kafka_with_config" {
   cluster_name           = "${var.name}"
   kafka_version          = "${var.kafka_version}"
   number_of_broker_nodes = "${var.number_of_broker_nodes}"
+  enhanced_monitoring    = "${var.enhanced_monitoring}"
 
   broker_node_group_info {
     instance_type   = "${var.msk_instance_type}"
@@ -216,7 +220,7 @@ resource "aws_iam_user" "msk_acmpca_iam_user" {
   path  = "/"
 }
 
-#policy attachment for default policy
+#policy attachment for CA policy
 resource "aws_iam_policy" "acmpca_policy_with_msk_policy" {
   count = "${var.certificateauthority == "true" ? 1 : 0}"
   name  = "${var.name}-acmpcaPolicy"
@@ -243,4 +247,36 @@ resource aws_iam_policy_attachment "msk_acmpca_iam_policy_attachment" {
   name       = "${var.name}-acmpcaPolicy-attachment"
   users      = ["${aws_iam_user.msk_acmpca_iam_user.name}"]
   policy_arn = "${aws_iam_policy.acmpca_policy_with_msk_policy.arn}"
+}
+
+resource "aws_iam_user" "msk_iam_user" {
+  name = "${var.name}-user"
+  path = "/"
+}
+
+resource "aws_iam_policy" "msk_iam_policy" {
+  name = "${var.name}-policy"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "IAMPermissions",
+      "Effect": "Allow",
+      "Action": [
+        "cloudwatch:ListMetrics",
+        "cloudwatch:GetMetricStatistics"
+      ],
+      "Resource": "${local.msk_cluster_arn}"
+    }
+  ]
+}
+EOF
+}
+
+resource aws_iam_policy_attachment "msk_iam_policy_attachment" {
+  name       = "${var.name}-policy-attachment"
+  users      = ["${aws_iam_user.msk_iam_user.name}"]
+  policy_arn = "${aws_iam_policy.msk_iam_policy.arn}"
 }

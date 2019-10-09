@@ -112,3 +112,8 @@ variable "type" {
   description = "A map of tags to add to all resources"
   default     = ""
 }
+
+variable "enhanced_monitoring" {
+  description = "The desired enhanced MSK CloudWatch monitoring level"
+  default     = "DEFAULT"
+}
