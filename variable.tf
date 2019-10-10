@@ -29,7 +29,7 @@ variable "vpc_id" {
 
 variable "subnet_ids" {
   description = "The msk cluster subnet ID"
-  type        = "list"
+  type        = list(string)
 }
 
 variable "cidr_blocks" {
@@ -112,3 +112,4 @@ variable "type" {
   description = "A map of tags to add to all resources"
   default     = ""
 }
+

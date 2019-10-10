@@ -6,12 +6,12 @@ Module usage:
        name                   = "msktestclutser"
        msk_instance_type      = "kafka.m5.large"
        kafka_version          = "1.1.1"
-       environment            = "${var.environment}"
+       environment            = var.environment
        number_of_broker_nodes = "3"
-       subnet_ids             = ["${data.aws_subnet_ids.suben_id_name.ids}"]
-      vpc_id                 = "${var.vpc_id}"
+       subnet_ids             = data.aws_subnet_ids.suben_id_name.ids
+      vpc_id                 =  var.vpc_id
        ebs_volume_size        = "50"
-       cidr_blocks            = ["${values(var.compute_cidrs)}"]
+       cidr_blocks            = [values(var.compute_cidrs]
      }
 
      module "msk_cluster_with_config" {
@@ -20,12 +20,12 @@ Module usage:
        name                   = "msktestclusterwithconfig"
        msk_instance_type      = "kafka.m5.large"
        kafka_version          = "1.1.1"
-       environment            = "${var.environment}"
+       environment            = var.environment
        number_of_broker_nodes = "3"
        subnet_ids             = ["${data.aws_subnet_ids.suben_id_name.ids}"]
        vpc_id                 = "${var.vpc_id}"
        ebs_volume_size        = "50"
-       cidr_blocks            = ["${values(var.compute_cidrs)}"]
+       cidr_blocks            = [values(var.compute_cidrs)]
 
        config_name           = "testmskconfig"
        config_kafka_versions = ["1.1.1"]
