@@ -41,7 +41,11 @@ Module usage:
 
 | Name | Description | Type | Default | Required |
 |------|-------------|:----:|:-----:|:-----:|
+| CertificateauthorityarnList | ARN of the AWS managed  CA  to attach to the MSK cluster | map | `<map>` | no |
+| acmpca\_iam\_user\_name | The name of the iam user assigned to the created AWS Private CA | string | `""` | no |
+| certificateauthority | ARN of the AWS managed  CA  to attach to the MSK cluster | string | `"false"` | no |
 | cidr\_blocks | MSK cluster cidr blocks | list | `<list>` | no |
+| client\_authentication\_type | ARN of the MSK configuration to attach to the MSK cluster | string | `"false"` | no |
 | client\_broker | Encryption setting for data in transit between clients and brokers. Valid values: TLS, TLS_PLAINTEXT, and PLAINTEXT | string | `"TLS_PLAINTEXT"` | no |
 | config\_arn | ARN of the MSK configuration to attach to the MSK cluster | string | `""` | no |
 | config\_description | The description of the MSK configuration | string | `""` | no |
@@ -51,12 +55,15 @@ Module usage:
 | config\_server\_properties | The properties to set on the MSK cluster. Omitted properties are set to a default value | string | `""` | no |
 | ebs\_volume\_size | The msk custer EBS volume size | string | n/a | yes |
 | environment | The environment the msk cluster is running in i.e. dev, prod etc | string | n/a | yes |
+| iam\_user\_policy\_name | The policy name of attached to the user | string | `""` | no |
 | kafka\_version | The kafka version for the AWS MSK cluster | string | `"2.2.1"` | no |
 | msk\_instance\_type | The msk custer instance type | string | n/a | yes |
 | name | name of the msk cluster | string | n/a | yes |
 | number\_of\_broker\_nodes | The number of broker nodes running in the msk cluster | string | n/a | yes |
+| policy | The JSON policy for the acmpca | string | `""` | no |
 | subnet\_ids | The msk cluster subnet ID | list | n/a | yes |
 | tags | A map of tags to add to all resources | map | `<map>` | no |
+| type | A map of tags to add to all resources | string | `""` | no |
 | vpc\_id | The msk cluster VPC ID | string | n/a | yes |
 
 ## Outputs
