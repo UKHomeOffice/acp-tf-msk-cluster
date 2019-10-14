@@ -131,7 +131,7 @@ resource "aws_msk_cluster" "msk_kafka" {
 
   client_authentication {
     tls {
-      certificate_authority_arns = aws_acmpca_certificate_authority.msk_kafka_with_ca[count.index].arn
+      certificate_authority_arns = [aws_acmpca_certificate_authority.msk_kafka_with_ca[count.index].arn]
     }
   }
 
@@ -170,7 +170,7 @@ resource "aws_msk_cluster" "msk_kafka_with_config" {
 
   client_authentication {
     tls {
-      certificate_authority_arns = aws_acmpca_certificate_authority.msk_kafka_ca_with_config[count.index].arn
+      certificate_authority_arns = [aws_acmpca_certificate_authority.msk_kafka_ca_with_config[count.index].arn]
     }
   }
 
@@ -304,6 +304,6 @@ EOF
 resource "aws_iam_policy_attachment" "msk_acmpca_iam_policy_attachment" {
   count      = var.certificateauthority == "true" ? 1 : 0
   name       = "${var.name}-acmpcaPolicy-attachment"
-  users      = aws_iam_user.msk_acmpca_iam_user[count.index].name
+  users      = [aws_iam_user.msk_acmpca_iam_user[count.index].name]
   policy_arn = aws_iam_policy.acmpca_policy_with_msk_policy[count.index].arn
 }
