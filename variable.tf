@@ -32,11 +32,6 @@ variable "subnet_ids" {
   type        = list(string)
 }
 
-variable "tags" {
-  description = "A map of tags to add to all resources"
-  default     = {}
-}
-
 variable "cidr_blocks" {
   description = "MSK cluster cidr blocks"
   default     = ["0.0.0.0/0"]
@@ -45,6 +40,26 @@ variable "cidr_blocks" {
 variable "client_broker" {
   description = "Encryption setting for data in transit between clients and brokers. Valid values: TLS, TLS_PLAINTEXT, and PLAINTEXT"
   default     = "TLS_PLAINTEXT"
+}
+
+variable "certificateauthority" {
+  description = "ARN of the AWS managed  CA  to attach to the MSK cluster"
+  default     = false
+}
+
+variable "CertificateauthorityarnList" {
+  description = "ARN of the AWS managed  CA  to attach to the MSK cluster"
+  default     = {}
+}
+
+variable "client_authentication_type" {
+  description = "ARN of the MSK configuration to attach to the MSK cluster"
+  default     = false
+}
+
+variable "acmpca_iam_user_name" {
+  description = "The name of the iam user assigned to the created AWS Private CA"
+  default     = ""
 }
 
 variable "config_name" {
@@ -75,5 +90,25 @@ variable "config_revision" {
 # to be used if a configuration exists already
 variable "config_arn" {
   description = "ARN of the MSK configuration to attach to the MSK cluster"
+  default     = ""
+}
+
+variable "iam_user_policy_name" {
+  description = "The policy name of attached to the user"
+  default     = ""
+}
+
+variable "policy" {
+  description = "The JSON policy for the acmpca"
+  default     = ""
+}
+
+variable "tags" {
+  description = "A map of tags to add to all resources"
+  default     = {}
+}
+
+variable "type" {
+  description = "A map of tags to add to all resources"
   default     = ""
 }
