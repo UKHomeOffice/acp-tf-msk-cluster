@@ -5,7 +5,7 @@ output "zookeeper_connect_string" {
 
 output "bootstrap_brokers" {
   description = "Plaintext connection host:port pairs"
-  value       = "${coalesce(element(concat(aws_msk_cluster.msk_kafka.*.bootstrap_brokers, list("")), 0), element(concat(aws_msk_cluster.msk_kafka_with_config.*.bootstrap_brokers, list("")), 0))}"
+  value       = "${join("", [element(concat(aws_msk_cluster.msk_kafka.*.bootstrap_brokers, list("")), 0), element(concat(aws_msk_cluster.msk_kafka_with_config.*.bootstrap_brokers, list("")), 0)])}"
 }
 
 output "bootstrap_brokers_tls" {
