@@ -42,8 +42,8 @@
  */
 
 locals {
-  aws_acmpca_certificate_authority_arn = "${coalesce(element(concat(aws_acmpca_certificate_authority.msk_kafka_with_ca.*.arn, list("")), 0), element(concat(aws_acmpca_certificate_authority.msk_kafka_ca_with_config.*.arn, list("")), 0))}"
-  msk_cluster_arn                      = "${coalesce(element(concat(aws_msk_cluster.msk_kafka.*.arn, list("")), 0), element(concat(aws_msk_cluster.msk_kafka_with_config.*.arn, list("")), 0))}"
+  aws_acmpca_certificate_authority_arn = var.certificateauthority == "true" ? coalesce(element(concat(aws_acmpca_certificate_authority.msk_kafka_with_ca.*.arn, list("")), 0), element(concat(aws_acmpca_certificate_authority.msk_kafka_ca_with_config.*.arn, list("")), 0)) : ""
+  msk_cluster_arn                      = coalesce(element(concat(aws_msk_cluster.msk_kafka.*.arn, list("")), 0), element(concat(aws_msk_cluster.msk_kafka_with_config.*.arn, list("")), 0))
 }
 
 data "aws_caller_identity" "current" {}
@@ -173,8 +173,7 @@ resource "aws_msk_cluster" "msk_kafka_with_config" {
 
   client_authentication {
     tls {
-      certificate_authority_arns = [aws_acmpca_certificate_authority.msk_kafka_ca_with_config[count.index].arn]
-    }
+      certificate_authority_arns = aws_acmpca_certificate_authority_arn
   }
 
   encryption_info {
@@ -337,7 +336,7 @@ resource "aws_iam_policy" "msk_iam_policy" {
 EOF
 }
 
-resource aws_iam_policy_attachment "msk_iam_policy_attachment" {
+resource "aws_iam_policy_attachment" "msk_iam_policy_attachment" {
   name       = "${var.name}-policy-attachment"
   users      = [aws_iam_user.msk_iam_user.name]
   policy_arn = aws_iam_policy.msk_iam_policy.arn
