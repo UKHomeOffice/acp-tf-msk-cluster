@@ -49,8 +49,9 @@ variable "certificateauthority" {
 
 variable "CertificateauthorityarnList" {
   description = "ARN of the AWS managed  CA  to attach to the MSK cluster"
-  default     = {}
+  default     = []
 }
+
 
 variable "client_authentication_type" {
   description = "ARN of the MSK configuration to attach to the MSK cluster"
