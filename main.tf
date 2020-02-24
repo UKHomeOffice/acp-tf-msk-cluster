@@ -249,7 +249,7 @@ resource "aws_acmpca_certificate_authority" "msk_kafka_with_ca" {
 # CA for msk Cluster with custom config
 
 resource "aws_acmpca_certificate_authority" "msk_kafka_ca_with_config" {
-  count = var.certificateauthority == "true" && var.config_name != "" || var.config_arn != "" ? 1 : 0
+  count = var.certificateauthority == "true" && (var.config_name != "" || var.config_arn != "") ? 1 : 0
 
   certificate_authority_configuration {
     key_algorithm     = "RSA_4096"
