@@ -42,7 +42,7 @@
  */
 
 locals {
-  aws_acmpca_certificate_authority_arn = "${coalesce(element(concat(aws_acmpca_certificate_authority.msk_kafka_with_ca.*.arn, list("")), 0), element(concat(aws_acmpca_certificate_authority.msk_kafka_ca_with_config.*.arn, list("")), 0), element(var.CertificateauthorityarnList, 0))}"
+  aws_acmpca_certificate_authority_arn = "${coalesce(element(concat(aws_acmpca_certificate_authority.msk_kafka_with_ca.*.arn, list("")), 0), element(concat(aws_acmpca_certificate_authority.msk_kafka_ca_with_config.*.arn, list("")), 0), element(concat(var.CertificateauthorityarnList, list("")), 0))}"
   msk_cluster_arn                      = "${coalesce(element(concat(aws_msk_cluster.msk_kafka.*.arn, list("")), 0), element(concat(aws_msk_cluster.msk_kafka_with_config.*.arn, list("")), 0))}"
 }
 
@@ -145,6 +145,17 @@ resource "aws_msk_cluster" "msk_kafka" {
     }
   }
 
+  open_monitoring {
+    prometheus {
+      jmx_exporter {
+        enabled_in_broker = var.prometheus_jmx_exporter_enabled
+      }
+      node_exporter {
+        enabled_in_broker = var.prometheus_node_exporter_enabled
+      }
+    }
+  }
+
   tags = merge(
     var.tags,
     {
@@ -194,6 +205,17 @@ resource "aws_msk_cluster" "msk_kafka_with_config" {
       var.config_revision,
       join("", aws_msk_configuration.msk_kafka_config.*.latest_revision)
     )
+  }
+
+  open_monitoring {
+    prometheus {
+      jmx_exporter {
+        enabled_in_broker = var.prometheus_jmx_exporter_enabled
+      }
+      node_exporter {
+        enabled_in_broker = var.prometheus_node_exporter_enabled
+      }
+    }
   }
 
   tags = merge(

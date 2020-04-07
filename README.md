@@ -62,6 +62,8 @@ Module usage:
 | name | name of the msk cluster | string | n/a | yes |
 | number\_of\_broker\_nodes | The number of broker nodes running in the msk cluster | string | n/a | yes |
 | policy | The JSON policy for the acmpca | string | `""` | no |
+| prometheus\_jmx\_exporter\_enabled | Enable Prometheus open monitoring for the JMX exporter | string | `"false"` | no |
+| prometheus\_node\_exporter\_enabled | Enable Prometheus open monitoring for the node exporter | string | `"false"` | no |
 | subnet\_ids | The msk cluster subnet ID | list | n/a | yes |
 | tags | A map of tags to add to all resources | map | `<map>` | no |
 | type | A map of tags to add to all resources | string | `""` | no |

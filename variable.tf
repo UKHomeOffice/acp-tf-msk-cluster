@@ -118,3 +118,13 @@ variable "enhanced_monitoring" {
   description = "The desired enhanced MSK CloudWatch monitoring level"
   default     = "DEFAULT"
 }
+
+variable "prometheus_jmx_exporter_enabled" {
+  description = "Enable Prometheus open monitoring for the JMX exporter"
+  default     = false
+}
+
+variable "prometheus_node_exporter_enabled" {
+  description = "Enable Prometheus open monitoring for the node exporter"
+  default     = false
+}
