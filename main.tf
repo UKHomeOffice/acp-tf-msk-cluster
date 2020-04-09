@@ -145,6 +145,17 @@ resource "aws_msk_cluster" "msk_kafka" {
     }
   }
 
+  open_monitoring {
+    prometheus {
+      jmx_exporter {
+        enabled_in_broker = var.prometheus_jmx_exporter_enabled
+      }
+      node_exporter {
+        enabled_in_broker = var.prometheus_node_exporter_enabled
+      }
+    }
+  }
+
   tags = merge(
     var.tags,
     {
@@ -194,6 +205,17 @@ resource "aws_msk_cluster" "msk_kafka_with_config" {
       var.config_revision,
       join("", aws_msk_configuration.msk_kafka_config.*.latest_revision)
     )
+  }
+
+  open_monitoring {
+    prometheus {
+      jmx_exporter {
+        enabled_in_broker = var.prometheus_jmx_exporter_enabled
+      }
+      node_exporter {
+        enabled_in_broker = var.prometheus_node_exporter_enabled
+      }
+    }
   }
 
   tags = merge(
