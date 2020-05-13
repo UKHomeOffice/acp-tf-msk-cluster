@@ -42,7 +42,7 @@
  */
 
 locals {
-  aws_acmpca_certificate_authority_arn = "${coalesce(element(concat(aws_acmpca_certificate_authority.msk_kafka_with_ca.*.arn, list("")), 0), element(concat(aws_acmpca_certificate_authority.msk_kafka_ca_with_config.*.arn, list("")), 0), element(var.CertificateauthorityarnList, 0))}"
+  aws_acmpca_certificate_authority_arn = "${coalesce(element(concat(aws_acmpca_certificate_authority.msk_kafka_with_ca.*.arn, list("")), 0), element(concat(aws_acmpca_certificate_authority.msk_kafka_ca_with_config.*.arn, list("")), 0), element(concat(var.CertificateauthorityarnList, list("")), 0))}"
   msk_cluster_arn                      = "${coalesce(element(concat(aws_msk_cluster.msk_kafka.*.arn, list("")), 0), element(concat(aws_msk_cluster.msk_kafka_with_config.*.arn, list("")), 0))}"
 }
 
