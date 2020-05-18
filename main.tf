@@ -78,6 +78,22 @@ resource "aws_security_group" "sg_msk" {
     cidr_blocks = var.cidr_blocks
   }
 
+  # JMX Exporter
+  ingress {
+    from_port   = 11001
+    to_port     = 11001
+    protocol    = "tcp"
+    cidr_blocks = var.cidr_blocks
+  }
+
+  #  Node Exporter
+  ingress {
+    from_port   = 11002
+    to_port     = 11002
+    protocol    = "tcp"
+    cidr_blocks = var.cidr_blocks
+  }
+
   egress {
     from_port   = 0
     to_port     = 0
