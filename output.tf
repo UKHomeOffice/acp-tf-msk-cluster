@@ -17,3 +17,8 @@ output "msk_cluster_arn" {
   description = "The MSK cluster arn"
   value       = "${coalesce(element(concat(aws_msk_cluster.msk_kafka.*.arn, list("")), 0), element(concat(aws_msk_cluster.msk_kafka_with_config.*.arn, list("")), 0))}"
 }
+
+output "msk_sg_id" {
+  description = "The MSK security group ID"
+  value       = aws_security_group.sg_msk.id
+}

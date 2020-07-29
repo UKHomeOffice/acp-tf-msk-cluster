@@ -77,3 +77,5 @@ Module usage:
 | bootstrap\_brokers\_tls | TLS connection host:port pairs |
 | msk\_cluster\_arn | The MSK cluster arn |
 | zookeeper\_connect\_string | A comma separated list of one or more IP:port pairs to use to connect to the Apache Zookeeper cluster |
+| msk\_sg\_id | The MSK security group ID |
+
