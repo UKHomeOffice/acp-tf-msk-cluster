@@ -65,6 +65,13 @@ resource "aws_security_group" "sg_msk" {
   }
 
   ingress {
+    from_port   = 2182
+    to_port     = 2182
+    protocol    = "tcp"
+    cidr_blocks = var.cidr_blocks
+  }
+
+  ingress {
     from_port   = 9092
     to_port     = 9092
     protocol    = "tcp"
