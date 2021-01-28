@@ -324,7 +324,8 @@ resource "aws_iam_policy" "acmpca_policy_with_msk_policy" {
       "Effect": "Allow",
       "Action": [
         "acm-pca:IssueCertificate",
-        "acm-pca:GetCertificate"
+        "acm-pca:GetCertificate",
+        "acm-pca:ListCertificateAuthorities"
       ],
       "Resource": "${local.aws_acmpca_certificate_authority_arn}"
     }
