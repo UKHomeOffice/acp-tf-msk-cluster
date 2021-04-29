@@ -104,6 +104,7 @@ resource "aws_security_group" "sg_msk" {
 }
 
 resource "aws_kms_key" "kms" {
+  # count       = var.encryption_at_rest_kms_key_arn == null ? 1 : 0
   description = "msk cluster kms key"
   policy      = data.aws_iam_policy_document.kms_key_policy_document.json
   tags = merge(
@@ -119,6 +120,7 @@ resource "aws_kms_key" "kms" {
 
 
 resource "aws_kms_alias" "msk_cluster_kms_alias" {
+  # count         = var.encryption_at_rest_kms_key_arn == null ? 1 : 0
   name          = "alias/${var.name}"
   target_key_id = aws_kms_key.kms.key_id
 }
@@ -145,7 +147,7 @@ resource "aws_msk_cluster" "msk_kafka" {
   }
 
   encryption_info {
-    encryption_at_rest_kms_key_arn = aws_kms_key.kms.arn
+    encryption_at_rest_kms_key_arn = var.encryption_at_rest_kms_key_arn == null ? aws_kms_key.kms.arn : var.encryption_at_rest_kms_key_arn
 
     encryption_in_transit {
       client_broker = var.client_broker
@@ -196,7 +198,7 @@ resource "aws_msk_cluster" "msk_kafka_with_config" {
   }
 
   encryption_info {
-    encryption_at_rest_kms_key_arn = aws_kms_key.kms.arn
+    encryption_at_rest_kms_key_arn = var.encryption_at_rest_kms_key_arn == null ? aws_kms_key.kms.arn : var.encryption_at_rest_kms_key_arn
 
     encryption_in_transit {
       client_broker = var.client_broker
