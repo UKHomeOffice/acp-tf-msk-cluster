@@ -128,3 +128,13 @@ variable "prometheus_node_exporter_enabled" {
   description = "Enable Prometheus open monitoring for the node exporter"
   default     = false
 }
+
+variable "key_rotation" {
+  description = "Enable email notifications for old IAM keys."
+  default     = "true"
+}
+
+variable "email_addresses" {
+  description = "A list of email addresses for key rotation notifications."
+  default     = []
+}

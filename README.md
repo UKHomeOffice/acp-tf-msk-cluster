@@ -9,7 +9,7 @@ Module usage:
        environment            = "${var.environment}"
        number_of_broker_nodes = "3"
        subnet_ids             = ["${data.aws_subnet_ids.suben_id_name.ids}"]
-      vpc_id                 = "${var.vpc_id}"
+       vpc_id                 = "${var.vpc_id}"
        ebs_volume_size        = "50"
        cidr_blocks            = ["${values(var.compute_cidrs)}"]
      }
@@ -37,45 +37,83 @@ Module usage:
      PROPERTIES
      }
 
+## Requirements
+
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.12 |
+
+## Providers
+
+| Name | Version |
+|------|---------|
+| <a name="provider_aws"></a> [aws](#provider\_aws) | n/a |
+
+## Modules
+
+No modules.
+
+## Resources
+
+| Name | Type |
+|------|------|
+| [aws_acmpca_certificate_authority.msk_kafka_ca_with_config](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/acmpca_certificate_authority) | resource |
+| [aws_acmpca_certificate_authority.msk_kafka_with_ca](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/acmpca_certificate_authority) | resource |
+| [aws_iam_policy.acmpca_policy_with_msk_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy) | resource |
+| [aws_iam_policy.msk_iam_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy) | resource |
+| [aws_iam_policy_attachment.msk_acmpca_iam_policy_attachment](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy_attachment) | resource |
+| [aws_iam_policy_attachment.msk_iam_policy_attachment](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy_attachment) | resource |
+| [aws_iam_user.msk_acmpca_iam_user](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_user) | resource |
+| [aws_iam_user.msk_iam_user](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_user) | resource |
+| [aws_kms_alias.msk_cluster_kms_alias](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kms_alias) | resource |
+| [aws_kms_key.kms](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kms_key) | resource |
+| [aws_msk_cluster.msk_kafka](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/msk_cluster) | resource |
+| [aws_msk_cluster.msk_kafka_with_config](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/msk_cluster) | resource |
+| [aws_msk_configuration.msk_kafka_config](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/msk_configuration) | resource |
+| [aws_security_group.sg_msk](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
+| [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
+| [aws_iam_policy_document.kms_key_policy_document](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
+
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|:----:|:-----:|:-----:|
-| CertificateauthorityarnList | ARN of the AWS managed  CA  to attach to the MSK cluster | map | `<map>` | no |
-| acmpca\_iam\_user\_name | The name of the iam user assigned to the created AWS Private CA | string | `""` | no |
-| certificateauthority | ARN of the AWS managed  CA  to attach to the MSK cluster | string | `"false"` | no |
-| cidr\_blocks | MSK cluster cidr blocks | list | `<list>` | no |
-| client\_authentication\_type | ARN of the MSK configuration to attach to the MSK cluster | string | `"false"` | no |
-| client\_broker | Encryption setting for data in transit between clients and brokers. Valid values: TLS, TLS_PLAINTEXT, and PLAINTEXT | string | `"TLS_PLAINTEXT"` | no |
-| config\_arn | ARN of the MSK configuration to attach to the MSK cluster | string | `""` | no |
-| config\_description | The description of the MSK configuration | string | `""` | no |
-| config\_kafka\_versions | A list of Kafka versions that the configuration supports | list | `<list>` | no |
-| config\_name | Name of the MSK configuration to attach to the MSK cluster | string | `""` | no |
-| config\_revision | The revision of the MSK configuration to use | string | `""` | no |
-| config\_server\_properties | The properties to set on the MSK cluster. Omitted properties are set to a default value | string | `""` | no |
-| ebs\_volume\_size | The msk custer EBS volume size | string | n/a | yes |
-| enhanced\_monitoring | The desired enhanced MSK CloudWatch monitoring level | string | `"DEFAULT"` | no |
-| environment | The environment the msk cluster is running in i.e. dev, prod etc | string | n/a | yes |
-| iam\_user\_policy\_name | The policy name of attached to the user | string | `""` | no |
-| kafka\_version | The kafka version for the AWS MSK cluster | string | `"2.2.1"` | no |
-| msk\_instance\_type | The msk custer instance type | string | n/a | yes |
-| name | name of the msk cluster | string | n/a | yes |
-| number\_of\_broker\_nodes | The number of broker nodes running in the msk cluster | string | n/a | yes |
-| policy | The JSON policy for the acmpca | string | `""` | no |
-| prometheus\_jmx\_exporter\_enabled | Enable Prometheus open monitoring for the JMX exporter | string | `"false"` | no |
-| prometheus\_node\_exporter\_enabled | Enable Prometheus open monitoring for the node exporter | string | `"false"` | no |
-| subnet\_ids | The msk cluster subnet ID | list | n/a | yes |
-| tags | A map of tags to add to all resources | map | `<map>` | no |
-| type | A map of tags to add to all resources | string | `""` | no |
-| vpc\_id | The msk cluster VPC ID | string | n/a | yes |
+|------|-------------|------|---------|:--------:|
+| <a name="input_CertificateauthorityarnList"></a> [CertificateauthorityarnList](#input\_CertificateauthorityarnList) | ARN of the AWS managed  CA  to attach to the MSK cluster | `list` | `[]` | no |
+| <a name="input_acmpca_iam_user_name"></a> [acmpca\_iam\_user\_name](#input\_acmpca\_iam\_user\_name) | The name of the iam user assigned to the created AWS Private CA | `string` | `""` | no |
+| <a name="input_certificateauthority"></a> [certificateauthority](#input\_certificateauthority) | ARN of the AWS managed  CA  to attach to the MSK cluster | `bool` | `false` | no |
+| <a name="input_cidr_blocks"></a> [cidr\_blocks](#input\_cidr\_blocks) | MSK cluster cidr blocks | `list` | <pre>[<br>  "0.0.0.0/0"<br>]</pre> | no |
+| <a name="input_client_authentication_type"></a> [client\_authentication\_type](#input\_client\_authentication\_type) | ARN of the MSK configuration to attach to the MSK cluster | `bool` | `false` | no |
+| <a name="input_client_broker"></a> [client\_broker](#input\_client\_broker) | Encryption setting for data in transit between clients and brokers. Valid values: TLS, TLS\_PLAINTEXT, and PLAINTEXT | `string` | `"TLS_PLAINTEXT"` | no |
+| <a name="input_config_arn"></a> [config\_arn](#input\_config\_arn) | ARN of the MSK configuration to attach to the MSK cluster | `string` | `""` | no |
+| <a name="input_config_description"></a> [config\_description](#input\_config\_description) | The description of the MSK configuration | `string` | `""` | no |
+| <a name="input_config_kafka_versions"></a> [config\_kafka\_versions](#input\_config\_kafka\_versions) | A list of Kafka versions that the configuration supports | `list` | `[]` | no |
+| <a name="input_config_name"></a> [config\_name](#input\_config\_name) | Name of the MSK configuration to attach to the MSK cluster | `string` | `""` | no |
+| <a name="input_config_revision"></a> [config\_revision](#input\_config\_revision) | The revision of the MSK configuration to use | `string` | `""` | no |
+| <a name="input_config_server_properties"></a> [config\_server\_properties](#input\_config\_server\_properties) | The properties to set on the MSK cluster. Omitted properties are set to a default value | `string` | `""` | no |
+| <a name="input_ebs_volume_size"></a> [ebs\_volume\_size](#input\_ebs\_volume\_size) | The msk custer EBS volume size | `any` | n/a | yes |
+| <a name="input_email_addresses"></a> [email\_addresses](#input\_email\_addresses) | A list of email addresses for key rotation notifications. | `list` | `[]` | no |
+| <a name="input_enhanced_monitoring"></a> [enhanced\_monitoring](#input\_enhanced\_monitoring) | The desired enhanced MSK CloudWatch monitoring level | `string` | `"DEFAULT"` | no |
+| <a name="input_environment"></a> [environment](#input\_environment) | The environment the msk cluster is running in i.e. dev, prod etc | `any` | n/a | yes |
+| <a name="input_iam_user_policy_name"></a> [iam\_user\_policy\_name](#input\_iam\_user\_policy\_name) | The policy name of attached to the user | `string` | `""` | no |
+| <a name="input_kafka_version"></a> [kafka\_version](#input\_kafka\_version) | The kafka version for the AWS MSK cluster | `string` | `"2.2.1"` | no |
+| <a name="input_key_rotation"></a> [key\_rotation](#input\_key\_rotation) | Enable email notifications for old IAM keys. | `string` | `"true"` | no |
+| <a name="input_msk_instance_type"></a> [msk\_instance\_type](#input\_msk\_instance\_type) | The msk custer instance type | `any` | n/a | yes |
+| <a name="input_name"></a> [name](#input\_name) | name of the msk cluster | `any` | n/a | yes |
+| <a name="input_number_of_broker_nodes"></a> [number\_of\_broker\_nodes](#input\_number\_of\_broker\_nodes) | The number of broker nodes running in the msk cluster | `any` | n/a | yes |
+| <a name="input_policy"></a> [policy](#input\_policy) | The JSON policy for the acmpca | `string` | `""` | no |
+| <a name="input_prometheus_jmx_exporter_enabled"></a> [prometheus\_jmx\_exporter\_enabled](#input\_prometheus\_jmx\_exporter\_enabled) | Enable Prometheus open monitoring for the JMX exporter | `bool` | `false` | no |
+| <a name="input_prometheus_node_exporter_enabled"></a> [prometheus\_node\_exporter\_enabled](#input\_prometheus\_node\_exporter\_enabled) | Enable Prometheus open monitoring for the node exporter | `bool` | `false` | no |
+| <a name="input_subnet_ids"></a> [subnet\_ids](#input\_subnet\_ids) | The msk cluster subnet ID | `list(string)` | n/a | yes |
+| <a name="input_tags"></a> [tags](#input\_tags) | A map of tags to add to all resources | `map` | `{}` | no |
+| <a name="input_type"></a> [type](#input\_type) | A map of tags to add to all resources | `string` | `""` | no |
+| <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | The msk cluster VPC ID | `any` | n/a | yes |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| bootstrap\_brokers | Plaintext connection host:port pairs |
-| bootstrap\_brokers\_tls | TLS connection host:port pairs |
-| msk\_cluster\_arn | The MSK cluster arn |
-| zookeeper\_connect\_string | A comma separated list of one or more IP:port pairs to use to connect to the Apache Zookeeper cluster |
-| msk\_sg\_id | The MSK security group ID |
-
+| <a name="output_bootstrap_brokers"></a> [bootstrap\_brokers](#output\_bootstrap\_brokers) | Plaintext connection host:port pairs |
+| <a name="output_bootstrap_brokers_tls"></a> [bootstrap\_brokers\_tls](#output\_bootstrap\_brokers\_tls) | TLS connection host:port pairs |
+| <a name="output_msk_cluster_arn"></a> [msk\_cluster\_arn](#output\_msk\_cluster\_arn) | The MSK cluster arn |
+| <a name="output_msk_sg_id"></a> [msk\_sg\_id](#output\_msk\_sg\_id) | The MSK security group ID |
+| <a name="output_zookeeper_connect_string"></a> [zookeeper\_connect\_string](#output\_zookeeper\_connect\_string) | A comma separated list of one or more IP:port pairs to use to connect to the Apache Zookeeper cluster |
