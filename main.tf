@@ -390,3 +390,34 @@ resource "aws_iam_policy_attachment" "msk_iam_policy_attachment" {
   users      = [aws_iam_user.msk_iam_user.name]
   policy_arn = aws_iam_policy.msk_iam_policy.arn
 }
+
+resource "aws_iam_policy" "iam_access_keys_policy" {
+  name        = "${var.iam_user_policy_name}-AccessKeyPolicy"
+  policy      = data.aws_iam_policy_document.iam_user_access_key_policy_document.json
+  description = "Policy to allow users to manage their own access keys"
+}
+
+resource "aws_iam_policy_attachment" "msk_iam_access_key_policy_attachment" {
+  name       = "${var.name}-iam-access-key-policy-attachment"
+  users      = [aws_iam_user.msk_iam_user.name]
+  policy_arn = aws_iam_policy.iam_access_keys_policy.arn
+}
+
+resource "aws_iam_policy" "ca_access_keys_policy" {
+  count = var.certificateauthority == "true" ? 1 : 0
+
+  name        = "${var.iam_user_policy_name}-CA-AccessKeyPolicy-${count.index}"
+  policy      = data.aws_iam_policy_document.acmpca_user_access_key_policy_document[count.index].json
+  description = "Policy to allow CA users to manage their own access keys"
+}
+
+resource "aws_iam_policy_attachment" "msk_ca_access_key_policy_attachment" {
+  count      = var.certificateauthority == "true" ? 1 : 0
+  name       = "${var.name}-ca-access-key-policy-attachment"
+  users      = [aws_iam_user.msk_acmpca_iam_user[count.index].name]
+  policy_arn = aws_iam_policy.ca_access_keys_policy[count.index].arn
+}
+
+
+
+
