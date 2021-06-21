@@ -359,7 +359,7 @@ resource "aws_iam_policy" "msk_iam_policy" {
         "cloudwatch:ListMetrics",
         "cloudwatch:GetMetricStatistics"
       ],
-      "Resource": "${local.msk_cluster_arn}"
+      "Resource": "*"
     }
   ]
 }
