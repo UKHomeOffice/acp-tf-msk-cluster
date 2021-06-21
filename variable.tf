@@ -128,3 +128,8 @@ variable "prometheus_node_exporter_enabled" {
   description = "Enable Prometheus open monitoring for the node exporter"
   default     = false
 }
+
+variable "encryption_at_rest_kms_key_arn" {
+  description = "use to set custom kms key to encrypt data written to EBS volume"
+  default     = null
+}
