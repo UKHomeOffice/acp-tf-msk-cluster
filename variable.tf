@@ -133,3 +133,13 @@ variable "encryption_at_rest_kms_key_arn" {
   description = "use to set custom kms key to encrypt data written to EBS volume"
   default     = null
 }
+
+variable "key_rotation" {
+  description = "Enable email notifications for old IAM keys."
+  default     = "true"
+}
+
+variable "email_addresses" {
+  description = "A list of email addresses for key rotation notifications."
+  default     = []
+}

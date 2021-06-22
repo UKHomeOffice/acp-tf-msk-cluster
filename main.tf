@@ -44,6 +44,7 @@
 locals {
   aws_acmpca_certificate_authority_arn = coalesce(element(concat(aws_acmpca_certificate_authority.msk_kafka_with_ca.*.arn, list("")), 0), element(concat(aws_acmpca_certificate_authority.msk_kafka_ca_with_config.*.arn, list("")), 0), element(concat(var.CertificateauthorityarnList, list("")), 0))
   msk_cluster_arn                      = coalesce(element(concat(aws_msk_cluster.msk_kafka.*.arn, list("")), 0), element(concat(aws_msk_cluster.msk_kafka_with_config.*.arn, list("")), 0))
+  email_tags                           = { for i, email in var.email_addresses : "email${i}" => email }
 }
 
 data "aws_caller_identity" "current" {}
@@ -310,6 +311,14 @@ resource "aws_iam_user" "msk_acmpca_iam_user" {
   count = var.certificateauthority == "true" ? 1 : 0
   name  = "${var.name}-acmpca-user"
   path  = "/"
+
+  tags = merge(
+    var.tags,
+    local.email_tags,
+    {
+      "key_rotation" = var.key_rotation
+    },
+  )
 }
 
 #policy attachment for CA policy
@@ -345,6 +354,14 @@ resource "aws_iam_policy_attachment" "msk_acmpca_iam_policy_attachment" {
 resource "aws_iam_user" "msk_iam_user" {
   name = "${var.name}-user"
   path = "/"
+
+  tags = merge(
+    var.tags,
+    local.email_tags,
+    {
+      "key_rotation" = var.key_rotation
+    },
+  )
 }
 
 resource "aws_iam_policy" "msk_iam_policy" {
