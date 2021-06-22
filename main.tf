@@ -390,3 +390,9 @@ resource "aws_iam_policy_attachment" "msk_iam_policy_attachment" {
   users      = [aws_iam_user.msk_iam_user.name]
   policy_arn = aws_iam_policy.msk_iam_policy.arn
 }
+
+module "self_serve_access_keys" {
+  source = "git::https://github.com/UKHomeOffice/acp-tf-self-serve-access-keys?ref=v0.1.0"
+
+  user_names = concat(aws_iam_user.msk_acmpca_iam_user.*.name, aws_iam_user.msk_iam_user.*.name)
+}
