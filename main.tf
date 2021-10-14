@@ -136,7 +136,7 @@ resource "aws_msk_cluster" "msk_kafka" {
 
   client_authentication {
     tls {
-      certificate_authority_arns = var.CertificateauthorityarnList != "" ? var.CertificateauthorityarnList : [aws_acmpca_certificate_authority.msk_kafka_with_ca[count.index].arn]
+      certificate_authority_arns = length(var.CertificateauthorityarnList) != 0 ? var.CertificateauthorityarnList : [aws_acmpca_certificate_authority.msk_kafka_with_ca[count.index].arn]
     }
   }
 
@@ -187,7 +187,7 @@ resource "aws_msk_cluster" "msk_kafka_with_config" {
 
   client_authentication {
     tls {
-      certificate_authority_arns = var.CertificateauthorityarnList != "" ? var.CertificateauthorityarnList : [aws_acmpca_certificate_authority.msk_kafka_ca_with_config[count.index].arn]
+      certificate_authority_arns = length(var.CertificateauthorityarnList) != 0 ? var.CertificateauthorityarnList : [aws_acmpca_certificate_authority.msk_kafka_ca_with_config[count.index].arn]
     }
   }
 
@@ -252,8 +252,6 @@ resource "aws_acmpca_certificate_authority" "msk_kafka_with_ca" {
 
     subject {
       common_name = var.name
-
-      # add other subjects in this module
     }
   }
 
