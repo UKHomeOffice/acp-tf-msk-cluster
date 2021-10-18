@@ -1,39 +1,39 @@
 variable "name" {
-  description = "name of the msk cluster"
+  description = "Name of the MSK cluster"
 }
 
 variable "environment" {
-  description = "The environment the msk cluster is running in i.e. dev, prod etc"
+  description = "The environment the MSK cluster is running in i.e. dev, prod etc"
 }
 
 variable "kafka_version" {
-  description = "The kafka version for the AWS MSK cluster"
+  description = "The Kafka version for the AWS MSK cluster"
   default     = "2.2.1"
 }
 
 variable "number_of_broker_nodes" {
-  description = "The number of broker nodes running in the msk cluster"
+  description = "The number of broker nodes running in the MSK cluster"
 }
 
 variable "msk_instance_type" {
-  description = "The msk custer instance type"
+  description = "The MSK cluster instance type"
 }
 
 variable "ebs_volume_size" {
-  description = "The msk custer EBS volume size"
+  description = "The MSK cluster EBS volume size for each broker"
 }
 
 variable "vpc_id" {
-  description = "The msk cluster VPC ID "
+  description = "The MSK cluster's VPC ID"
 }
 
 variable "subnet_ids" {
-  description = "The msk cluster subnet ID"
+  description = "A list of subnets that the MSK cluster should run in"
   type        = list(string)
 }
 
 variable "cidr_blocks" {
-  description = "MSK cluster cidr blocks"
+  description = "The CIDR blocks that the MSK cluster allows ingress connections from"
   default     = ["0.0.0.0/0"]
 }
 
@@ -43,23 +43,18 @@ variable "client_broker" {
 }
 
 variable "certificateauthority" {
-  description = "ARN of the AWS managed  CA  to attach to the MSK cluster"
+  description = "Should a CA be created with the MSK cluster?"
   default     = false
 }
 
 variable "CertificateauthorityarnList" {
-  description = "ARN of the AWS managed  CA  to attach to the MSK cluster"
+  description = "ARN of the AWS managed CA to attach to the MSK cluster"
   default     = []
-}
-
-
-variable "client_authentication_type" {
-  description = "ARN of the MSK configuration to attach to the MSK cluster"
-  default     = false
+  type        = list(string)
 }
 
 variable "acmpca_iam_user_name" {
-  description = "The name of the iam user assigned to the created AWS Private CA"
+  description = "The name of the IAM user assigned to the created AWS Private CA"
   default     = ""
 }
 
@@ -94,23 +89,13 @@ variable "config_arn" {
   default     = ""
 }
 
-variable "iam_user_policy_name" {
-  description = "The policy name of attached to the user"
-  default     = ""
-}
-
-variable "policy" {
-  description = "The JSON policy for the acmpca"
-  default     = ""
-}
-
 variable "tags" {
   description = "A map of tags to add to all resources"
   default     = {}
 }
 
 variable "type" {
-  description = "A map of tags to add to all resources"
+  description = "The type of the certificate authority"
   default     = ""
 }
 
@@ -130,7 +115,7 @@ variable "prometheus_node_exporter_enabled" {
 }
 
 variable "encryption_at_rest_kms_key_arn" {
-  description = "use to set custom kms key to encrypt data written to EBS volume"
+  description = "Use to set custom KMS key to encrypt data written to EBS volume"
   default     = null
 }
 
