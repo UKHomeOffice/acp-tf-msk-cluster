@@ -42,7 +42,7 @@
  */
 
 locals {
-  aws_acmpca_certificate_authority_arn = coalesce(element(concat(aws_acmpca_certificate_authority.msk_kafka_with_ca.*.arn, list("")), 0), element(concat(aws_acmpca_certificate_authority.msk_kafka_ca_with_config.*.arn, list("")), 0), element(concat(var.CertificateauthorityarnList, list("")), 0))
+  aws_acmpca_certificate_authority_arn = coalesce(element(concat(aws_acmpca_certificate_authority.msk_kafka_with_ca.*.arn, list("")), 0), element(concat(aws_acmpca_certificate_authority.msk_kafka_ca_with_config.*.arn, list("")), 0), element(concat(var.ca_arn, list("")), 0))
   msk_cluster_arn                      = coalesce(element(concat(aws_msk_cluster.msk_kafka.*.arn, list("")), 0), element(concat(aws_msk_cluster.msk_kafka_with_config.*.arn, list("")), 0))
   email_tags                           = { for i, email in var.email_addresses : "email${i}" => email }
 }
@@ -58,34 +58,6 @@ resource "aws_security_group" "sg_msk" {
   description = "Allow kafka traffic"
   vpc_id      = var.vpc_id
 
-  ingress {
-    from_port   = 2181
-    to_port     = 2181
-    protocol    = "tcp"
-    cidr_blocks = var.cidr_blocks
-  }
-
-  ingress {
-    from_port   = 2182
-    to_port     = 2182
-    protocol    = "tcp"
-    cidr_blocks = var.cidr_blocks
-  }
-
-  ingress {
-    from_port   = 9092
-    to_port     = 9092
-    protocol    = "tcp"
-    cidr_blocks = var.cidr_blocks
-  }
-
-  ingress {
-    from_port   = 9094
-    to_port     = 9094
-    protocol    = "tcp"
-    cidr_blocks = var.cidr_blocks
-  }
-
   tags = merge(
     var.tags,
     {
@@ -95,6 +67,53 @@ resource "aws_security_group" "sg_msk" {
       "Env" = var.environment
     },
   )
+}
+
+# Ingress Rules to permit inbound database port
+resource "aws_security_group_rule" "in_msk_port_1" {
+  type              = "ingress"
+  from_port         = 2181
+  to_port           = 2181
+  protocol          = "tcp"
+  cidr_blocks       = var.cidr_blocks
+  security_group_id = aws_security_group.sg_msk.id
+}
+
+resource "aws_security_group_rule" "in_msk_port_2" {
+  type              = "ingress"
+  from_port         = 2182
+  to_port           = 2182
+  protocol          = "tcp"
+  cidr_blocks       = var.cidr_blocks
+  security_group_id = aws_security_group.sg_msk.id
+}
+
+resource "aws_security_group_rule" "in_msk_port_3" {
+  type              = "ingress"
+  from_port         = 9092
+  to_port           = 9092
+  protocol          = "tcp"
+  cidr_blocks       = var.cidr_blocks
+  security_group_id = aws_security_group.sg_msk.id
+}
+
+resource "aws_security_group_rule" "in_msk_port_4" {
+  type              = "ingress"
+  from_port         = 9094
+  to_port           = 9094
+  protocol          = "tcp"
+  cidr_blocks       = var.cidr_blocks
+  security_group_id = aws_security_group.sg_msk.id
+}
+
+# Egress Rule to permit outbound to given CIDR
+resource "aws_security_group_rule" "outbound" {
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  cidr_blocks       = var.egress_cidr_blocks
+  security_group_id = aws_security_group.sg_msk.id
 }
 
 resource "aws_kms_key" "kms" {
@@ -136,7 +155,7 @@ resource "aws_msk_cluster" "msk_kafka" {
 
   client_authentication {
     tls {
-      certificate_authority_arns = length(var.CertificateauthorityarnList) != 0 ? var.CertificateauthorityarnList : [aws_acmpca_certificate_authority.msk_kafka_with_ca[count.index].arn]
+      certificate_authority_arns = length(var.ca_arn) != 0 ? var.ca_arn : [aws_acmpca_certificate_authority.msk_kafka_with_ca[count.index].arn]
     }
   }
 
@@ -187,7 +206,7 @@ resource "aws_msk_cluster" "msk_kafka_with_config" {
 
   client_authentication {
     tls {
-      certificate_authority_arns = length(var.CertificateauthorityarnList) != 0 ? var.CertificateauthorityarnList : [aws_acmpca_certificate_authority.msk_kafka_ca_with_config[count.index].arn]
+      certificate_authority_arns = length(var.ca_arn) != 0 ? var.ca_arn : [aws_acmpca_certificate_authority.msk_kafka_ca_with_config[count.index].arn]
     }
   }
 

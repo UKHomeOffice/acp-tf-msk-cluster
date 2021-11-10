@@ -80,10 +80,11 @@ Module usage:
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_CertificateauthorityarnList"></a> [CertificateauthorityarnList](#input_CertificateauthorityarnList) | ARN of the AWS managed CA to attach to the MSK cluster | `list(string)` | `[]` | no |
+| <a name="input_ca_arn"></a> [ca_arn](#input_ca_arn) | ARN of the AWS managed CA to attach to the MSK cluster | `list(string)` | `[]` | no |
 | <a name="input_acmpca_iam_user_name"></a> [acmpca_iam_user_name](#input_acmpca_iam_user_name) | The name of the IAM user assigned to the created AWS Private CA | `string` | `""` | no |
 | <a name="input_certificateauthority"></a> [certificateauthority](#input_certificateauthority) | Should a CA be created with the MSK cluster? | `bool` | `false` | no |
 | <a name="input_cidr_blocks"></a> [cidr_blocks](#input_cidr_blocks) | The CIDR blocks that the MSK cluster allows ingress connections from | `list` | <pre>[<br>  "0.0.0.0/0"<br>]</pre> | no |
+| <a name="input_egress_cidr_blocks"></a> [egress_cidr_blocks](#input_egress_cidr_blocks) | The CIDR blocks that the MSK cluster allows egress connections to | `list` | <pre>[<br>  "0.0.0.0/0"<br>]</pre> | no |
 | <a name="input_client_broker"></a> [client_broker](#input_client_broker) | Encryption setting for data in transit between clients and brokers. Valid values: TLS, TLS_PLAINTEXT, and PLAINTEXT | `string` | `"TLS_PLAINTEXT"` | no |
 | <a name="input_config_arn"></a> [config_arn](#input_config_arn) | ARN of the MSK configuration to attach to the MSK cluster | `string` | `""` | no |
 | <a name="input_config_description"></a> [config_description](#input_config_description) | The description of the MSK configuration | `string` | `""` | no |

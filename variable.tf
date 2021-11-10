@@ -37,6 +37,11 @@ variable "cidr_blocks" {
   default     = ["0.0.0.0/0"]
 }
 
+variable "egress_cidr_blocks" {
+  description = "Cidr blocks which this MSK cluster should allow egress traffic to"
+  default     = ["0.0.0.0/0"]
+}
+
 variable "client_broker" {
   description = "Encryption setting for data in transit between clients and brokers. Valid values: TLS, TLS_PLAINTEXT, and PLAINTEXT"
   default     = "TLS_PLAINTEXT"
@@ -47,7 +52,7 @@ variable "certificateauthority" {
   default     = false
 }
 
-variable "CertificateauthorityarnList" {
+variable "ca_arn" {
   description = "ARN of the AWS managed CA to attach to the MSK cluster"
   default     = []
   type        = list(string)
