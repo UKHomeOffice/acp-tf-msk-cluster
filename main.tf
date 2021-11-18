@@ -42,7 +42,7 @@
  */
 
 locals {
-  aws_acmpca_certificate_authority_arn = coalesce(element(concat(aws_acmpca_certificate_authority.msk_kafka_with_ca.*.arn, list("")), 0), element(concat(aws_acmpca_certificate_authority.msk_kafka_ca_with_config.*.arn, list("")), 0), element(concat(var.CertificateauthorityarnList, list("")), 0))
+  aws_acmpca_certificate_authority_arn = coalesce(element(concat(aws_acmpca_certificate_authority.msk_kafka_with_ca.*.arn, list("")), 0), element(concat(aws_acmpca_certificate_authority.msk_kafka_ca_with_config.*.arn, list("")), 0), element(concat(var.ca_arn, list("")), 0))
   msk_cluster_arn                      = coalesce(element(concat(aws_msk_cluster.msk_kafka.*.arn, list("")), 0), element(concat(aws_msk_cluster.msk_kafka_with_config.*.arn, list("")), 0))
   email_tags                           = { for i, email in var.email_addresses : "email${i}" => email }
 }
@@ -136,7 +136,7 @@ resource "aws_msk_cluster" "msk_kafka" {
 
   client_authentication {
     tls {
-      certificate_authority_arns = length(var.CertificateauthorityarnList) != 0 ? var.CertificateauthorityarnList : [aws_acmpca_certificate_authority.msk_kafka_with_ca[count.index].arn]
+      certificate_authority_arns = length(var.ca_arn) != 0 ? var.ca_arn : [aws_acmpca_certificate_authority.msk_kafka_with_ca[count.index].arn]
     }
   }
 
@@ -187,7 +187,7 @@ resource "aws_msk_cluster" "msk_kafka_with_config" {
 
   client_authentication {
     tls {
-      certificate_authority_arns = length(var.CertificateauthorityarnList) != 0 ? var.CertificateauthorityarnList : [aws_acmpca_certificate_authority.msk_kafka_ca_with_config[count.index].arn]
+      certificate_authority_arns = length(var.ca_arn) != 0 ? var.ca_arn : [aws_acmpca_certificate_authority.msk_kafka_ca_with_config[count.index].arn]
     }
   }
 

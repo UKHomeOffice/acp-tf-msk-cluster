@@ -80,7 +80,7 @@ Module usage:
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_CertificateauthorityarnList"></a> [CertificateauthorityarnList](#input_CertificateauthorityarnList) | ARN of the AWS managed CA to attach to the MSK cluster | `list(string)` | `[]` | no |
+| <a name="input_ca_arn"></a> [ca_arn](#input_ca_arn) | ARN of the AWS managed CA to attach to the MSK cluster | `list(string)` | `[]` | no |
 | <a name="input_acmpca_iam_user_name"></a> [acmpca_iam_user_name](#input_acmpca_iam_user_name) | The name of the IAM user assigned to the created AWS Private CA | `string` | `""` | no |
 | <a name="input_certificateauthority"></a> [certificateauthority](#input_certificateauthority) | Should a CA be created with the MSK cluster? | `bool` | `false` | no |
 | <a name="input_cidr_blocks"></a> [cidr_blocks](#input_cidr_blocks) | The CIDR blocks that the MSK cluster allows ingress connections from | `list` | <pre>[<br>  "0.0.0.0/0"<br>]</pre> | no |

@@ -47,7 +47,7 @@ variable "certificateauthority" {
   default     = false
 }
 
-variable "CertificateauthorityarnList" {
+variable "ca_arn" {
   description = "ARN of the AWS managed CA to attach to the MSK cluster"
   default     = []
   type        = list(string)
