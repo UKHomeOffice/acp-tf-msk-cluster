@@ -42,16 +42,12 @@
  */
 
 locals {
-  aws_acmpca_certificate_authority_arn = coalesce(element(concat(aws_acmpca_certificate_authority.msk_kafka_with_ca.*.arn, list("")), 0), element(concat(aws_acmpca_certificate_authority.msk_kafka_ca_with_config.*.arn, list("")), 0), element(concat(var.ca_arn, list("")), 0))
-  msk_cluster_arn                      = coalesce(element(concat(aws_msk_cluster.msk_kafka.*.arn, list("")), 0), element(concat(aws_msk_cluster.msk_kafka_with_config.*.arn, list("")), 0))
+  aws_acmpca_certificate_authority_arn = coalesce(element(concat(aws_acmpca_certificate_authority.msk_kafka_with_ca.*.arn, [""]), 0), element(concat(aws_acmpca_certificate_authority.msk_kafka_ca_with_config.*.arn, [""]), 0), element(concat(var.ca_arn, [""]), 0))
+  msk_cluster_arn                      = coalesce(element(concat(aws_msk_cluster.msk_kafka.*.arn, [""]), 0), element(concat(aws_msk_cluster.msk_kafka_with_config.*.arn, [""]), 0))
   email_tags                           = { for i, email in var.email_addresses : "email${i}" => email }
 }
 
 data "aws_caller_identity" "current" {}
-
-terraform {
-  required_version = ">= 0.12"
-}
 
 resource "aws_security_group" "sg_msk" {
   name        = "${var.name}-kafka-security-group"

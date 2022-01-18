@@ -34,6 +34,7 @@ variable "subnet_ids" {
 
 variable "cidr_blocks" {
   description = "The CIDR blocks that the MSK cluster allows ingress connections from"
+  type        = list(string)
   default     = ["0.0.0.0/0"]
 }
 
@@ -65,6 +66,7 @@ variable "config_name" {
 
 variable "config_kafka_versions" {
   description = "A list of Kafka versions that the configuration supports"
+  type        = list(string)
   default     = []
 }
 
@@ -91,6 +93,7 @@ variable "config_arn" {
 
 variable "tags" {
   description = "A map of tags to add to all resources"
+  type        = map(string)
   default     = {}
 }
 
@@ -106,11 +109,13 @@ variable "enhanced_monitoring" {
 
 variable "prometheus_jmx_exporter_enabled" {
   description = "Enable Prometheus open monitoring for the JMX exporter"
+  type        = bool
   default     = false
 }
 
 variable "prometheus_node_exporter_enabled" {
   description = "Enable Prometheus open monitoring for the node exporter"
+  type        = bool
   default     = false
 }
 
@@ -126,5 +131,6 @@ variable "key_rotation" {
 
 variable "email_addresses" {
   description = "A list of email addresses for key rotation notifications."
+  type        = list(string)
   default     = []
 }
