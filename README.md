@@ -1,42 +1,53 @@
 <!-- BEGIN_TF_DOCS -->
-Module usage:
+## Usage
 
-     module "msk\_cluster" {
-       source = "git::https://github.com/UKHomeOffice/acp-tf-msk-cluster?ref=master"
+### MSK Cluster
+```hcl
+module "msk_cluster" {
+  source = "git::https://github.com/UKHomeOffice/acp-tf-msk-cluster?ref=master"
 
-       name                   = "msktestclutser"
-       msk\_instance\_type      = "kafka.m5.large"
-       kafka\_version          = "1.1.1"
-       environment            = "${var.environment}"
-       number\_of\_broker\_nodes = "3"
-       subnet\_ids             = ["${data.aws\_subnet\_ids.suben\_id\_name.ids}"]
-      vpc\_id                 = "${var.vpc\_id}"
-       ebs\_volume\_size        = "50"
-       cidr\_blocks            = ["${values(var.compute\_cidrs)}"]
-     }
+  name                   = "msktestcluster"
+  msk_instance_type      = "kafka.m5.large"
+  kafka_version          = "2.8.1"
+  environment            = var.environment
+  number_of_broker_nodes = "3"
+  subnet_ids             = data.aws_subnet_ids.compute.ids
+  vpc_id                 = var.vpc_id
+  ebs_volume_size        = "50"
+  cidr_blocks            = values(var.compute_cidrs)
+  # certificateauthority = true (This will fail on merge the first time it's executed, this is expected. Install the CA in the AWS console then restart the merge.)
+  # or
+  # ca_arn               = [module.<existing_cert>.ca_certificate_arn]
+}
+```
 
-     module "msk\_cluster\_with\_config" {
-       source = "git::https://github.com/UKHomeOffice/acp-tf-msk-cluster?ref=master"
+### MSK Cluster with config
+```hcl
+module "msk_cluster_with_config" {
+  source = "git::https://github.com/UKHomeOffice/acp-tf-msk-cluster?ref=master"
 
-       name                   = "msktestclusterwithconfig"
-       msk\_instance\_type      = "kafka.m5.large"
-       kafka\_version          = "1.1.1"
-       environment            = "${var.environment}"
-       number\_of\_broker\_nodes = "3"
-       subnet\_ids             = ["${data.aws\_subnet\_ids.suben\_id\_name.ids}"]
-       vpc\_id                 = "${var.vpc\_id}"
-       ebs\_volume\_size        = "50"
-       cidr\_blocks            = ["${values(var.compute\_cidrs)}"]
+  name                        = "msktestclusterwithconfig"
+  msk_instance_type           = "kafka.m5.large"
+  kafka_version               = "2.8.1"
+  environment                 = var.environment
+  number_of_broker_nodes      = "3"
+  subnet_ids                  = data.aws_subnet_ids.compute.ids
+  vpc_id                      = var.vpc_id
+  ebs_volume_size             = "50"
+  cidr_blocks                 = values(var.compute_cidrs)
+  # certificateauthority      = true (This will fail on merge the first time it's executed, this is expected. Install the CA in the AWS console then restart the merge.)
+  # or
+  # ca_arn                    = [module.<existing_cert>.ca_certificate_arn]
+  config_name                 = "test-msk-config"
+  config_kafka_versions       = ["2.8.1"]
+  config_description          = "Test MSK configuration"
 
-       config\_name           = "testmskconfig"
-       config\_kafka\_versions = ["1.1.1"]
-       config\_description    = "Test MSK configuration"
-
-       config\_server\_properties = <<PROPERTIES
-     auto.create.topics.enable = true
-     delete.topic.enable = true
-     PROPERTIES
-     }
+  config_server_properties = <<PROPERTIES
+ auto.create.topics.enable = true
+ delete.topic.enable = true
+ PROPERTIES
+}
+```
 
 ## Requirements
 
@@ -49,7 +60,7 @@ Module usage:
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 3.72.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 3.75.1 |
 
 ## Modules
 
@@ -63,6 +74,8 @@ Module usage:
 |------|------|
 | [aws_acmpca_certificate_authority.msk_kafka_ca_with_config](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/acmpca_certificate_authority) | resource |
 | [aws_acmpca_certificate_authority.msk_kafka_with_ca](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/acmpca_certificate_authority) | resource |
+| [aws_appautoscaling_policy.msk_appautoscaling_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/appautoscaling_policy) | resource |
+| [aws_appautoscaling_target.msk_appautoscaling_target](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/appautoscaling_target) | resource |
 | [aws_iam_policy.acmpca_policy_with_msk_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy) | resource |
 | [aws_iam_policy.msk_iam_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy) | resource |
 | [aws_iam_policy_attachment.msk_acmpca_iam_policy_attachment](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy_attachment) | resource |
@@ -105,6 +118,8 @@ Module usage:
 | <a name="input_number_of_broker_nodes"></a> [number\_of\_broker\_nodes](#input\_number\_of\_broker\_nodes) | The number of broker nodes running in the MSK cluster | `any` | n/a | yes |
 | <a name="input_prometheus_jmx_exporter_enabled"></a> [prometheus\_jmx\_exporter\_enabled](#input\_prometheus\_jmx\_exporter\_enabled) | Enable Prometheus open monitoring for the JMX exporter | `bool` | `false` | no |
 | <a name="input_prometheus_node_exporter_enabled"></a> [prometheus\_node\_exporter\_enabled](#input\_prometheus\_node\_exporter\_enabled) | Enable Prometheus open monitoring for the node exporter | `bool` | `false` | no |
+| <a name="input_storage_autoscaling_max_capacity"></a> [storage\_autoscaling\_max\_capacity](#input\_storage\_autoscaling\_max\_capacity) | The MSK cluster EBS maximum volume size for each broker. Value between 1 and 16384. | `number` | `1` | no |
+| <a name="input_storage_autoscaling_threshold"></a> [storage\_autoscaling\_threshold](#input\_storage\_autoscaling\_threshold) | The percentage threshold that needs to be exceeded to trigger a scale up. Value between 10 and 80. | `number` | `65` | no |
 | <a name="input_subnet_ids"></a> [subnet\_ids](#input\_subnet\_ids) | A list of subnets that the MSK cluster should run in | `list(string)` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | A map of tags to add to all resources | `map(string)` | `{}` | no |
 | <a name="input_type"></a> [type](#input\_type) | The type of the certificate authority | `string` | `""` | no |
