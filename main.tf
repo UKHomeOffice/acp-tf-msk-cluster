@@ -1,45 +1,55 @@
 /**
-* Module usage:
-*
-*      module "msk_cluster" {
-*        source = "git::https://github.com/UKHomeOffice/acp-tf-msk-cluster?ref=master"
-*
-*        name                   = "msktestclutser"
-*        msk_instance_type      = "kafka.m5.large"
-*        kafka_version          = "1.1.1"
-*        environment            = "${var.environment}"
-*        number_of_broker_nodes = "3"
-*        subnet_ids             = ["${data.aws_subnet_ids.suben_id_name.ids}"]
-*       vpc_id                 = "${var.vpc_id}"
-*        ebs_volume_size        = "50"
-*        cidr_blocks            = ["${values(var.compute_cidrs)}"]
-*      }
-*
-*      module "msk_cluster_with_config" {
-*        source = "git::https://github.com/UKHomeOffice/acp-tf-msk-cluster?ref=master"
-*
-*        name                   = "msktestclusterwithconfig"
-*        msk_instance_type      = "kafka.m5.large"
-*        kafka_version          = "1.1.1"
-*        environment            = "${var.environment}"
-*        number_of_broker_nodes = "3"
-*        subnet_ids             = ["${data.aws_subnet_ids.suben_id_name.ids}"]
-*        vpc_id                 = "${var.vpc_id}"
-*        ebs_volume_size        = "50"
-*        cidr_blocks            = ["${values(var.compute_cidrs)}"]
-*
-*        config_name           = "testmskconfig"
-*        config_kafka_versions = ["1.1.1"]
-*        config_description    = "Test MSK configuration"
-*
-*        config_server_properties = <<PROPERTIES
-*      auto.create.topics.enable = true
-*      delete.topic.enable = true
-*      PROPERTIES
-*      }
-*
-*
+ * ## Usage
+ *
+ * ### MSK Cluster
+ * ```hcl
+ * module "msk_cluster" {
+ *   source = "git::https://github.com/UKHomeOffice/acp-tf-msk-cluster?ref=master"
+ *
+ *   name                   = "msktestcluster"
+ *   msk_instance_type      = "kafka.m5.large"
+ *   kafka_version          = "2.8.1"
+ *   environment            = var.environment
+ *   number_of_broker_nodes = "3"
+ *   subnet_ids             = data.aws_subnet_ids.compute.ids
+ *   vpc_id                 = var.vpc_id
+ *   ebs_volume_size        = "50"
+ *   cidr_blocks            = values(var.compute_cidrs)
+ *   # certificateauthority = true (This will fail on merge the first time it's executed, this is expected. Install the CA in the AWS console then restart the merge.)
+ *   # or
+ *   # ca_arn               = [module.<existing_cert>.ca_certificate_arn]
+ * }
+ * ```
+ *
+ * ### MSK Cluster with config
+ * ```hcl
+ * module "msk_cluster_with_config" {
+ *   source = "git::https://github.com/UKHomeOffice/acp-tf-msk-cluster?ref=master"
+ *
+ *   name                        = "msktestclusterwithconfig"
+ *   msk_instance_type           = "kafka.m5.large"
+ *   kafka_version               = "2.8.1"
+ *   environment                 = var.environment
+ *   number_of_broker_nodes      = "3"
+ *   subnet_ids                  = data.aws_subnet_ids.compute.ids
+ *   vpc_id                      = var.vpc_id
+ *   ebs_volume_size             = "50"
+ *   cidr_blocks                 = values(var.compute_cidrs)
+ *   # certificateauthority      = true (This will fail on merge the first time it's executed, this is expected. Install the CA in the AWS console then restart the merge.)
+ *   # or
+ *   # ca_arn                    = [module.<existing_cert>.ca_certificate_arn]
+ *   config_name                 = "test-msk-config"
+ *   config_kafka_versions       = ["2.8.1"]
+ *   config_description          = "Test MSK configuration"
+ *
+ *   config_server_properties = <<PROPERTIES
+ *  auto.create.topics.enable = true
+ *  delete.topic.enable = true
+ *  PROPERTIES
+ * }
+ * ```
  */
+
 
 locals {
   aws_acmpca_certificate_authority_arn = coalesce(element(concat(aws_acmpca_certificate_authority.msk_kafka_with_ca.*.arn, [""]), 0), element(concat(aws_acmpca_certificate_authority.msk_kafka_ca_with_config.*.arn, [""]), 0), element(concat(var.ca_arn, [""]), 0))
@@ -382,4 +392,34 @@ module "self_serve_access_keys" {
   source = "git::https://github.com/UKHomeOffice/acp-tf-self-serve-access-keys?ref=v0.1.0"
 
   user_names = concat(aws_iam_user.msk_acmpca_iam_user.*.name, aws_iam_user.msk_iam_user.*.name)
+}
+
+resource "aws_appautoscaling_target" "msk_appautoscaling_target" {
+  count = var.storage_autoscaling_max_capacity > var.ebs_volume_size ? 1 : 0
+
+  max_capacity       = var.storage_autoscaling_max_capacity
+  min_capacity       = 1
+  resource_id        = local.msk_cluster_arn
+  scalable_dimension = "kafka:broker-storage:VolumeSize"
+  service_namespace  = "kafka"
+}
+
+resource "aws_appautoscaling_policy" "msk_appautoscaling_policy" {
+  count = var.storage_autoscaling_max_capacity > var.ebs_volume_size ? 1 : 0
+
+  name               = "${var.name}-broker-scaling"
+  policy_type        = "TargetTrackingScaling"
+  resource_id        = local.msk_cluster_arn
+  scalable_dimension = join("", aws_appautoscaling_target.msk_appautoscaling_target.*.scalable_dimension)
+  service_namespace  = join("", aws_appautoscaling_target.msk_appautoscaling_target.*.service_namespace)
+
+  target_tracking_scaling_policy_configuration {
+    # Can't scale down an msk cluster disk after increasing it.
+    disable_scale_in = "true"
+    predefined_metric_specification {
+      predefined_metric_type = "KafkaBrokerStorageUtilization"
+    }
+
+    target_value = var.storage_autoscaling_threshold
+  }
 }

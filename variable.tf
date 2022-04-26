@@ -134,3 +134,29 @@ variable "email_addresses" {
   type        = list(string)
   default     = []
 }
+
+variable "storage_autoscaling_max_capacity" {
+  description = "The MSK cluster EBS maximum volume size for each broker. Value between 1 and 16384."
+  type        = number
+  default     = 1
+  validation {
+    condition = (
+      var.storage_autoscaling_max_capacity >= 1 &&
+      var.storage_autoscaling_max_capacity <= 16384
+    )
+    error_message = "Storage autoscaling max capacity must be between 1 and 16384."
+  }
+}
+
+variable "storage_autoscaling_threshold" {
+  description = "The percentage threshold that needs to be exceeded to trigger a scale up. Value between 10 and 80."
+  type        = number
+  default     = 65
+  validation {
+    condition = (
+      var.storage_autoscaling_threshold >= 10 &&
+      var.storage_autoscaling_threshold <= 80
+    )
+    error_message = "Storage autoscaling threshold must be between 10 and 80."
+  }
+}
