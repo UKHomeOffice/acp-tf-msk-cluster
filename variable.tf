@@ -40,7 +40,7 @@ variable "cidr_blocks" {
 
 variable "client_broker" {
   description = "Encryption setting for data in transit between clients and brokers. Valid values: TLS, TLS_PLAINTEXT, and PLAINTEXT"
-  default     = "TLS_PLAINTEXT"
+  default     = "TLS"
 }
 
 variable "certificateauthority" {
