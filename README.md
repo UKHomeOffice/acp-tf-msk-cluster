@@ -60,7 +60,7 @@ module "msk_cluster_with_config" {
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 3.75.1 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | ~> 3.0 |
 
 ## Modules
 
@@ -113,6 +113,7 @@ module "msk_cluster_with_config" {
 | <a name="input_environment"></a> [environment](#input\_environment) | The environment the MSK cluster is running in i.e. dev, prod etc | `any` | n/a | yes |
 | <a name="input_kafka_version"></a> [kafka\_version](#input\_kafka\_version) | The Kafka version for the AWS MSK cluster | `string` | `"2.2.1"` | no |
 | <a name="input_key_rotation"></a> [key\_rotation](#input\_key\_rotation) | Enable email notifications for old IAM keys. | `string` | `"true"` | no |
+| <a name="input_logging_broker_s3"></a> [logging\_broker\_s3](#input\_logging\_broker\_s3) | Configuration block for Broker Logs settings for s3. | <pre>object({<br>    enabled = bool<br>    bucket  = string<br>    prefix  = string<br>  })</pre> | `null` | no |
 | <a name="input_msk_instance_type"></a> [msk\_instance\_type](#input\_msk\_instance\_type) | The MSK cluster instance type | `any` | n/a | yes |
 | <a name="input_name"></a> [name](#input\_name) | Name of the MSK cluster | `any` | n/a | yes |
 | <a name="input_number_of_broker_nodes"></a> [number\_of\_broker\_nodes](#input\_number\_of\_broker\_nodes) | The number of broker nodes running in the MSK cluster | `any` | n/a | yes |
