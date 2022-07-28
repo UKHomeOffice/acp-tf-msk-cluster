@@ -160,3 +160,15 @@ variable "storage_autoscaling_threshold" {
     error_message = "Storage autoscaling threshold must be between 10 and 80."
   }
 }
+
+variable "logging_broker_bucket_name" {
+  description = "foo"
+  type        = string
+  default     = ""
+}
+
+variable "logging_broker_bucket_prefix" {
+  description = "foo"
+  type        = string
+  default     = ""
+}

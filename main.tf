@@ -165,6 +165,16 @@ resource "aws_msk_cluster" "msk_kafka" {
     }
   }
 
+  logging_info {
+    broker_logs {
+      s3 {
+        enabled = var.logging_broker_bucket_name != ""
+        bucket  = var.logging_broker_bucket_name
+        prefix  = var.logging_broker_bucket_prefix
+      }
+    }
+  }
+
   tags = merge(
     var.tags,
     {
@@ -223,6 +233,16 @@ resource "aws_msk_cluster" "msk_kafka_with_config" {
       }
       node_exporter {
         enabled_in_broker = var.prometheus_node_exporter_enabled
+      }
+    }
+  }
+
+  logging_info {
+    broker_logs {
+      s3 {
+        enabled = var.logging_broker_bucket_name != ""
+        bucket  = var.logging_broker_bucket_name
+        prefix  = var.logging_broker_bucket_prefix
       }
     }
   }
