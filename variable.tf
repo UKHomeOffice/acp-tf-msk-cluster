@@ -160,3 +160,13 @@ variable "storage_autoscaling_threshold" {
     error_message = "Storage autoscaling threshold must be between 10 and 80."
   }
 }
+
+variable "logging_broker_s3" {
+  description = "Configuration block for Broker Logs settings for s3."
+  type = object({
+    enabled = bool
+    bucket  = string
+    prefix  = string
+  })
+  default = null
+}
