@@ -165,11 +165,11 @@ resource "aws_msk_cluster" "msk_kafka" {
     }
   }
 
-  logging_info {
-    broker_logs {
-      dynamic "s3" {
-        for_each = var.logging_broker_s3 == null ? [] : [true]
-        content {
+  dynamic "logging_info" {
+    for_each = var.logging_broker_s3 == null ? [] : [true]
+    content {
+      broker_logs {
+        s3 {
           enabled = var.logging_broker_s3["enabled"]
           bucket  = var.logging_broker_s3["bucket"]
           prefix  = var.logging_broker_s3["prefix"]
@@ -240,11 +240,11 @@ resource "aws_msk_cluster" "msk_kafka_with_config" {
     }
   }
 
-  logging_info {
-    broker_logs {
-      dynamic "s3" {
-        for_each = var.logging_broker_s3 == null ? [] : [true]
-        content {
+  dynamic "logging_info" {
+    for_each = var.logging_broker_s3 == null ? [] : [true]
+    content {
+      broker_logs {
+        s3 {
           enabled = var.logging_broker_s3["enabled"]
           bucket  = var.logging_broker_s3["bucket"]
           prefix  = var.logging_broker_s3["prefix"]
