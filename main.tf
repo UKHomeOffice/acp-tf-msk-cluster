@@ -53,8 +53,9 @@
 
 locals {
   aws_acmpca_certificate_authority_arn = coalesce(element(concat(aws_acmpca_certificate_authority.msk_kafka_with_ca.*.arn, [""]), 0), element(concat(aws_acmpca_certificate_authority.msk_kafka_ca_with_config.*.arn, [""]), 0), element(concat(var.ca_arn, [""]), 0))
-  msk_cluster_arn                      = coalesce(element(concat(aws_msk_cluster.msk_kafka.*.arn, [""]), 0), element(concat(aws_msk_cluster.msk_kafka_with_config.*.arn, [""]), 0))
+  msk_cluster_arn                      = coalesce(element(concat(aws_msk_cluster.msk_kafka.*.arn, [""]), 0), element(concat(aws_msk_cluster.msk_kafka_with_config.*.arn, [""]), 0), element(concat(aws_msk_cluster.msk_kafka_with_autoscaling.*.arn, [""]), 0), element(concat(aws_msk_cluster.msk_kafka_with_config_and_autoscaling.*.arn, [""]), 0))
   email_tags                           = { for i, email in var.email_addresses : "email${i}" => email }
+
 }
 
 data "aws_caller_identity" "current" {}
@@ -126,7 +127,7 @@ resource "aws_kms_alias" "msk_cluster_kms_alias" {
 }
 
 resource "aws_msk_cluster" "msk_kafka" {
-  count = var.config_name == "" && var.config_arn == "" ? 1 : 0
+  count = var.config_name == "" && var.config_arn == "" && var.storage_autoscaling_max_capacity <= var.ebs_volume_size ? 1 : 0
 
   cluster_name           = var.name
   kafka_version          = var.kafka_version
@@ -190,7 +191,7 @@ resource "aws_msk_cluster" "msk_kafka" {
 }
 
 resource "aws_msk_cluster" "msk_kafka_with_config" {
-  count = var.config_name != "" || var.config_arn != "" ? 1 : 0
+  count = (var.config_name != "" || var.config_arn != "") && var.storage_autoscaling_max_capacity <= var.ebs_volume_size ? 1 : 0
 
   cluster_name           = var.name
   kafka_version          = var.kafka_version
@@ -264,6 +265,159 @@ resource "aws_msk_cluster" "msk_kafka_with_config" {
   )
 }
 
+resource "aws_msk_cluster" "msk_kafka_with_autoscaling" {
+  count = var.config_name == "" && var.config_arn == "" && var.storage_autoscaling_max_capacity > var.ebs_volume_size ? 1 : 0
+
+  cluster_name           = var.name
+  kafka_version          = var.kafka_version
+  number_of_broker_nodes = var.number_of_broker_nodes
+  enhanced_monitoring    = var.enhanced_monitoring
+
+  broker_node_group_info {
+    instance_type   = var.msk_instance_type
+    ebs_volume_size = var.ebs_volume_size
+    client_subnets  = var.subnet_ids
+    security_groups = [aws_security_group.sg_msk.id]
+  }
+
+  client_authentication {
+    tls {
+      certificate_authority_arns = length(var.ca_arn) != 0 ? var.ca_arn : [aws_acmpca_certificate_authority.msk_kafka_with_ca[count.index].arn]
+    }
+  }
+
+  encryption_info {
+    encryption_at_rest_kms_key_arn = var.encryption_at_rest_kms_key_arn == null ? aws_kms_key.kms[count.index].arn : var.encryption_at_rest_kms_key_arn
+
+    encryption_in_transit {
+      client_broker = var.client_broker
+    }
+  }
+
+  open_monitoring {
+    prometheus {
+      jmx_exporter {
+        enabled_in_broker = var.prometheus_jmx_exporter_enabled
+      }
+      node_exporter {
+        enabled_in_broker = var.prometheus_node_exporter_enabled
+      }
+    }
+  }
+
+  dynamic "logging_info" {
+    for_each = var.logging_broker_s3 == null ? [] : [true]
+    content {
+      broker_logs {
+        s3 {
+          enabled = var.logging_broker_s3["enabled"]
+          bucket  = var.logging_broker_s3["bucket"]
+          prefix  = var.logging_broker_s3["prefix"]
+        }
+      }
+    }
+  }
+  lifecycle {
+    ignore_changes = [
+      # Ignore changes to ebs_volume_size in favor of autoscaling policy, this will mean future manual increases must be done in AWS console.
+      broker_node_group_info[0].ebs_volume_size,
+    ]
+  }
+
+  tags = merge(
+    var.tags,
+    {
+      "Name" = format("%s-%s", var.environment, var.name)
+    },
+    {
+      "Env" = var.environment
+    },
+  )
+}
+
+resource "aws_msk_cluster" "msk_kafka_with_config_and_autoscaling" {
+  count = (var.config_name != "" || var.config_arn != "") && var.storage_autoscaling_max_capacity > var.ebs_volume_size ? 1 : 0
+
+  cluster_name           = var.name
+  kafka_version          = var.kafka_version
+  number_of_broker_nodes = var.number_of_broker_nodes
+  enhanced_monitoring    = var.enhanced_monitoring
+
+  broker_node_group_info {
+    instance_type   = var.msk_instance_type
+    ebs_volume_size = var.ebs_volume_size
+    client_subnets  = var.subnet_ids
+    security_groups = [aws_security_group.sg_msk.id]
+  }
+
+  client_authentication {
+    tls {
+      certificate_authority_arns = length(var.ca_arn) != 0 ? var.ca_arn : [aws_acmpca_certificate_authority.msk_kafka_ca_with_config[count.index].arn]
+    }
+  }
+
+  encryption_info {
+    encryption_at_rest_kms_key_arn = var.encryption_at_rest_kms_key_arn == null ? aws_kms_key.kms[count.index].arn : var.encryption_at_rest_kms_key_arn
+
+    encryption_in_transit {
+      client_broker = var.client_broker
+    }
+  }
+
+  configuration_info {
+    arn = coalesce(
+      var.config_arn,
+      join("", aws_msk_configuration.msk_kafka_config.*.arn)
+    )
+    revision = coalesce(
+      var.config_revision,
+      join("", aws_msk_configuration.msk_kafka_config.*.latest_revision)
+    )
+  }
+
+  open_monitoring {
+    prometheus {
+      jmx_exporter {
+        enabled_in_broker = var.prometheus_jmx_exporter_enabled
+      }
+      node_exporter {
+        enabled_in_broker = var.prometheus_node_exporter_enabled
+      }
+    }
+  }
+
+  dynamic "logging_info" {
+    for_each = var.logging_broker_s3 == null ? [] : [true]
+    content {
+      broker_logs {
+        s3 {
+          enabled = var.logging_broker_s3["enabled"]
+          bucket  = var.logging_broker_s3["bucket"]
+          prefix  = var.logging_broker_s3["prefix"]
+        }
+      }
+    }
+  }
+
+  lifecycle {
+    ignore_changes = [
+      # Ignore changes to ebs_volume_size in favor of autoscaling policy, this will mean future manual increases must be done in AWS console.
+      broker_node_group_info[0].ebs_volume_size,
+    ]
+  }
+
+  tags = merge(
+    var.tags,
+    {
+      "Name" = format("%s-%s", var.environment, var.name)
+    },
+    {
+      "Env" = var.environment
+    },
+  )
+}
+
+
 resource "aws_msk_configuration" "msk_kafka_config" {
   count = var.config_name != "" && var.config_arn == "" ? 1 : 0
 
@@ -301,8 +455,8 @@ resource "aws_acmpca_certificate_authority" "msk_kafka_with_ca" {
 
 }
 
-# CA for msk Cluster with custom config
 
+# CA for msk Cluster with custom config
 resource "aws_acmpca_certificate_authority" "msk_kafka_ca_with_config" {
   count = var.certificateauthority == "true" && (var.config_name != "" || var.config_arn != "") ? 1 : 0
 
