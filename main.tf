@@ -178,6 +178,13 @@ resource "aws_msk_cluster" "msk_kafka" {
     }
   }
 
+  lifecycle {
+    ignore_changes = [
+      # Ignore changes to ebs_volume_size in favor of autoscaling policy, this will mean future manual increases must be done in AWS console.
+      broker_node_group_info[0].ebs_volume_size,
+    ]
+  }
+
   tags = merge(
     var.tags,
     {
@@ -251,6 +258,13 @@ resource "aws_msk_cluster" "msk_kafka_with_config" {
         }
       }
     }
+  }
+
+  lifecycle {
+    ignore_changes = [
+      # Ignore changes to ebs_volume_size in favor of autoscaling policy, this will mean future manual increases must be done in AWS console.
+      broker_node_group_info[0].ebs_volume_size,
+    ]
   }
 
   tags = merge(
