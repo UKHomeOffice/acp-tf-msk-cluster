@@ -64,13 +64,7 @@ resource "aws_security_group" "sg_msk" {
   description = "Allow kafka traffic"
   vpc_id      = var.vpc_id
 
-  ingress {
-    from_port   = 2181
-    to_port     = 2181
-    protocol    = "tcp"
-    cidr_blocks = var.cidr_blocks
-  }
-
+  #Zookeeper TLS port
   ingress {
     from_port   = 2182
     to_port     = 2182
@@ -78,13 +72,7 @@ resource "aws_security_group" "sg_msk" {
     cidr_blocks = var.cidr_blocks
   }
 
-  ingress {
-    from_port   = 9092
-    to_port     = 9092
-    protocol    = "tcp"
-    cidr_blocks = var.cidr_blocks
-  }
-
+  # Kafka TLS port (in VPC)
   ingress {
     from_port   = 9094
     to_port     = 9094
@@ -150,7 +138,8 @@ resource "aws_msk_cluster" "msk_kafka" {
     encryption_at_rest_kms_key_arn = var.encryption_at_rest_kms_key_arn == null ? aws_kms_key.kms[count.index].arn : var.encryption_at_rest_kms_key_arn
 
     encryption_in_transit {
-      client_broker = var.client_broker
+      client_broker = "TLS"
+      in_cluster = "true"
     }
   }
 
@@ -214,7 +203,8 @@ resource "aws_msk_cluster" "msk_kafka_with_config" {
     encryption_at_rest_kms_key_arn = var.encryption_at_rest_kms_key_arn == null ? aws_kms_key.kms[count.index].arn : var.encryption_at_rest_kms_key_arn
 
     encryption_in_transit {
-      client_broker = var.client_broker
+      client_broker = "TLS"
+      in_cluster = "true"
     }
   }
 
