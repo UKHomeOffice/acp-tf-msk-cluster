@@ -139,7 +139,7 @@ resource "aws_msk_cluster" "msk_kafka" {
 
     encryption_in_transit {
       client_broker = "TLS"
-      in_cluster = "true"
+      in_cluster    = "true"
     }
   }
 
@@ -204,7 +204,7 @@ resource "aws_msk_cluster" "msk_kafka_with_config" {
 
     encryption_in_transit {
       client_broker = "TLS"
-      in_cluster = "true"
+      in_cluster    = "true"
     }
   }
 
