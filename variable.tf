@@ -38,11 +38,6 @@ variable "cidr_blocks" {
   default     = ["0.0.0.0/0"]
 }
 
-variable "client_broker" {
-  description = "Encryption setting for data in transit between clients and brokers. Valid values: TLS, TLS_PLAINTEXT, and PLAINTEXT"
-  default     = "TLS"
-}
-
 variable "certificateauthority" {
   description = "Should a CA be created with the MSK cluster?"
   default     = false
