@@ -1,3 +1,11 @@
+## Compatibility
+
+As of Module version v1.8.0, Plaintext Ports are no longer allowed through the module's security groups for both the broker and zookeeper
+
+This means that from module v1.8.0 onwards the **minimum supported Kafka version is 2.5.1**
+
+Should you require an older version of Kafka than you should use module version v1.7.x. However, the downside is that plaintext ports will be allowed on the older module version
+
 ## Usage
 
 ### MSK Cluster
