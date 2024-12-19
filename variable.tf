@@ -165,3 +165,9 @@ variable "logging_broker_s3" {
   })
   default = null
 }
+
+variable "iam_authentication" {
+  description = "Enables IAM client authentication"
+  type = bool
+  default = false
+}
