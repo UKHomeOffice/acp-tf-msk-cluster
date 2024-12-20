@@ -417,6 +417,7 @@ resource "aws_iam_policy" "msk_iam_authentication" {
   policy = data.aws_iam_policy_document.msk_iam_authentication_document
 }
 
+# Change to bool
 resource "aws_iam_policy_attachment" "msk_iam_authentication_policy" {
   count = var.iam_authentication ? 1 : 0
   name = "${var.name}-authentication-policy-attachment"
