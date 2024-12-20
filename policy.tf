@@ -43,7 +43,18 @@ data "aws_iam_policy_document" "msk_iam_authentication_document" {
       "kafka-cluster:ReadData"
      ]
      resources = [ 
-        "arn:aws:kafka:eu-west-2${data.aws_caller_identity.current.account_id}:topic/${var.name}/*"
+        "arn:aws:kafka:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:topic/${var.name}/*"
+      ]
+  }
+  statement {
+    sid = "IAMAuthenticationPermissionGroup"
+    effect = "Allow"
+    actions = [ 
+      "kafka-cluster:AlterGroup",
+      "kafka-cluster:DescribeGroup"
+     ]
+     resources = [ 
+        "arn:aws:kafka:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:group/${var.name}/*"
       ]
   }
 }
