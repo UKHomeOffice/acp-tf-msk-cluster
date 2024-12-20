@@ -412,7 +412,7 @@ resource "aws_iam_policy_attachment" "msk_iam_policy_attachment" {
 
 resource "aws_iam_policy" "msk_iam_authentication" {
   count = var.iam_authentication == "true" ? 1 : 0
-  name = "${var.name}-policy"
+  name = "${var.name}-iam-auth-policy"
   description = "This policy allow IAM authenticated user to connect to MSK"
   policy = data.aws_iam_policy_document.msk_iam_authentication_document
 }
