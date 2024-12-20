@@ -21,6 +21,8 @@ data "aws_iam_policy_document" "kms_key_policy_document" {
   }
 }
 
+data "aws_region" "current" {}
+
 data "aws_iam_policy_document" "msk_iam_authentication_document" {
   statement {
     sid = "IAMAuthenticationPermission"
