@@ -411,14 +411,14 @@ resource "aws_iam_policy_attachment" "msk_iam_policy_attachment" {
 }
 
 resource "aws_iam_policy" "msk_iam_authentication" {
-  count = var.iam_authentication == "true" ? 1 : 0
+  count = var.iam_authentication ? 1 : 0
   name = "${var.name}-iam-auth-policy"
   description = "This policy allow IAM authenticated user to connect to MSK"
   policy = data.aws_iam_policy_document.msk_iam_authentication_document
 }
 
 resource "aws_iam_policy_attachment" "msk_iam_authentication_policy" {
-  count = var.iam_authentication == "true" ? 1 : 0
+  count = var.iam_authentication ? 1 : 0
   name = "${var.name}-authentication-policy-attachment"
   users = [ aws_iam_user.msk_iam_user.name ]
   policy_arn = aws_iam_policy.msk_iam_authentication.arn
