@@ -128,6 +128,12 @@ resource "aws_msk_cluster" "msk_kafka" {
     security_groups = [aws_security_group.sg_msk.id]
   }
 
+  lifecycle {
+    ignore_changes = [
+      client_authentication["sasl"],
+    ]
+  }
+
   client_authentication {
     tls {
       certificate_authority_arns = length(var.ca_arn) != 0 ? var.ca_arn : [aws_acmpca_certificate_authority.msk_kafka_with_ca[count.index].arn]
