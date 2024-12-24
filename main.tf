@@ -127,7 +127,8 @@ resource "aws_msk_cluster" "msk_kafka" {
     client_subnets  = var.subnet_ids
     security_groups = [aws_security_group.sg_msk.id]
   }
-
+  
+  # Adding lifecycle
   lifecycle {
     ignore_changes = [
       client_authentication["sasl"],
