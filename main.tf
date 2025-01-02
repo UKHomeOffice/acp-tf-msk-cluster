@@ -129,9 +129,7 @@ resource "aws_msk_cluster" "msk_kafka" {
   }
   
   lifecycle {
-    ignore_changes = [
-      client_authentication["sasl"],
-    ]
+    ignore_changes = [client_authentication]
   }
 
   client_authentication {
@@ -203,9 +201,7 @@ resource "aws_msk_cluster" "msk_kafka_with_config" {
   }
 
   lifecycle {
-    ignore_changes = [
-      client_authentication["sasl"],
-    ]
+    ignore_changes = [client_authentication]
   }
 
   client_authentication {
