@@ -8,10 +8,11 @@ output "bootstrap_brokers" {
   value       = join("", [element(concat(aws_msk_cluster.msk_kafka.*.bootstrap_brokers, [""]), 0), element(concat(aws_msk_cluster.msk_kafka_with_config.*.bootstrap_brokers, [""]), 0)])
 }
 
-output "bootstrap_brokers_tls" {
+/**output "bootstrap_brokers_tls" {
   description = "TLS connection host:port pairs"
   value       = coalesce(element(concat(aws_msk_cluster.msk_kafka.*.bootstrap_brokers_tls, [""]), 0), element(concat(aws_msk_cluster.msk_kafka_with_config.*.bootstrap_brokers_tls, [""]), 0))
 }
+**/
 
 output "msk_cluster_arn" {
   description = "The MSK cluster arn"
