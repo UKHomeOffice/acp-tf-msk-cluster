@@ -129,11 +129,9 @@ resource "aws_msk_cluster" "msk_kafka" {
   }
   
   lifecycle {
-    ignore_changes = [
-      client_authentication["sasl"],
-    ]
+    ignore_changes = [client_authentication]
   }
-
+/*
   client_authentication {
     tls {
       certificate_authority_arns = length(var.ca_arn) != 0 ? var.ca_arn : [aws_acmpca_certificate_authority.msk_kafka_with_ca[count.index].arn]
@@ -142,7 +140,7 @@ resource "aws_msk_cluster" "msk_kafka" {
       iam = var.iam_authentication
     }
   }
-
+*/
   encryption_info {
     encryption_at_rest_kms_key_arn = var.encryption_at_rest_kms_key_arn == null ? aws_kms_key.kms[count.index].arn : var.encryption_at_rest_kms_key_arn
 
@@ -203,12 +201,10 @@ resource "aws_msk_cluster" "msk_kafka_with_config" {
   }
 
   lifecycle {
-    ignore_changes = [
-      client_authentication["sasl"],
-    ]
+    ignore_changes = [client_authentication]
   }
 
-  client_authentication {
+  /*client_authentication {
     tls {
       certificate_authority_arns = length(var.ca_arn) != 0 ? var.ca_arn : [aws_acmpca_certificate_authority.msk_kafka_ca_with_config[count.index].arn]
     }
@@ -216,7 +212,7 @@ resource "aws_msk_cluster" "msk_kafka_with_config" {
       iam = var.iam_authentication
     }
   }
-
+*/
   encryption_info {
     encryption_at_rest_kms_key_arn = var.encryption_at_rest_kms_key_arn == null ? aws_kms_key.kms[count.index].arn : var.encryption_at_rest_kms_key_arn
 
