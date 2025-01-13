@@ -10,7 +10,7 @@ output "bootstrap_brokers" {
 
 output "bootstrap_brokers_tls" {
   description = "TLS connection host:port pairs"
-  value       = coalesce(element(concat(aws_msk_cluster.msk_kafka.*.bootstrap_brokers_tls, [""]), 0), element(concat(aws_msk_cluster.msk_kafka_with_config.*.bootstrap_brokers_tls, [""]), 0))
+  value       = one(concat(aws_msk_cluster.msk_kafka[*].bootstrap_brokers_tls, aws_msk_cluster.msk_kafka_with_config[*].bootstrap_brokers_tls))
 }
 
 output "msk_cluster_arn" {

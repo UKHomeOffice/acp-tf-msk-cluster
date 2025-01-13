@@ -129,17 +129,21 @@ resource "aws_msk_cluster" "msk_kafka" {
   }
   
   lifecycle {
-    ignore_changes = [
-      client_authentication["sasl"],
-    ]
+    ignore_changes = [client_authentication]
   }
 
   client_authentication {
-    tls {
-      certificate_authority_arns = length(var.ca_arn) != 0 ? var.ca_arn : [aws_acmpca_certificate_authority.msk_kafka_with_ca[count.index].arn]
+    dynamic tls {
+      for_each = var.iam_authentication ? [] : ["1"]
+      content {
+        certificate_authority_arns = length(var.ca_arn) != 0 ? var.ca_arn : [aws_acmpca_certificate_authority.msk_kafka_ca_with_config[count.index].arn]
+      }
     }
-    sasl {
-      iam = var.iam_authentication
+    dynamic sasl {
+      for_each = var.iam_authentication ? ["1"] : []
+      content {
+        iam = var.iam_authentication
+      }
     }
   }
 
@@ -203,17 +207,21 @@ resource "aws_msk_cluster" "msk_kafka_with_config" {
   }
 
   lifecycle {
-    ignore_changes = [
-      client_authentication["sasl"],
-    ]
+    ignore_changes = [client_authentication]
   }
 
   client_authentication {
-    tls {
-      certificate_authority_arns = length(var.ca_arn) != 0 ? var.ca_arn : [aws_acmpca_certificate_authority.msk_kafka_ca_with_config[count.index].arn]
+    dynamic tls {
+      for_each = var.iam_authentication ? [] : ["1"]
+      content {
+        certificate_authority_arns = length(var.ca_arn) != 0 ? var.ca_arn : [aws_acmpca_certificate_authority.msk_kafka_ca_with_config[count.index].arn]
+      }
     }
-    sasl {
-      iam = var.iam_authentication
+    dynamic sasl {
+      for_each = var.iam_authentication ? ["1"] : []
+      content {
+        iam = var.iam_authentication
+      }
     }
   }
 
