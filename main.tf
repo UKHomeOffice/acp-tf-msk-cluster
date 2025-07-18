@@ -138,10 +138,10 @@ resource "aws_msk_cluster" "msk_kafka" {
     tls {
       certificate_authority_arns = length(var.ca_arn) != 0 ? var.ca_arn : [aws_acmpca_certificate_authority.msk_kafka_with_ca[count.index].arn]
     }
-    sasl {
-      iam   = var.iam_authentication
-      scram = var.scram_authentication
-    }
+    # sasl {
+    #   iam   = var.iam_authentication
+    #   scram = var.scram_authentication
+    # }
   }
 
   encryption_info {
@@ -213,10 +213,10 @@ resource "aws_msk_cluster" "msk_kafka_with_config" {
     tls {
       certificate_authority_arns = length(var.ca_arn) != 0 ? var.ca_arn : [aws_acmpca_certificate_authority.msk_kafka_ca_with_config[count.index].arn]
     }
-    sasl {
-      iam   = var.iam_authentication
-      scram = var.scram_authentication
-    }
+    # sasl {
+    #   iam   = var.iam_authentication
+    #   scram = var.scram_authentication
+    # }
   }
 
   encryption_info {
