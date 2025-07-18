@@ -136,14 +136,14 @@ resource "aws_msk_cluster" "msk_kafka" {
 
   client_authentication {
     dynamic "tls" {
-      for_each = var.tls_enabled == true ? [1] : []
+      for_each = var.tls_enabled ? [1] : []
       content {
         certificate_authority_arns = length(var.ca_arn) != 0 ? var.ca_arn : [aws_acmpca_certificate_authority.msk_kafka_with_ca[count.index].arn]
 
       }
     }
     dynamic "sasl" {
-      for_each = var.tls_enabled == false ? [1] : []
+      for_each = var.tls_enabled ? [] : [1]
       content {
         iam   = var.iam_authentication
         scram = var.scram_authentication
