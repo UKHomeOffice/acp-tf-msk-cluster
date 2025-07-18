@@ -127,10 +127,10 @@ resource "aws_msk_cluster" "msk_kafka" {
     client_subnets  = var.subnet_ids
     security_groups = [aws_security_group.sg_msk.id]
   }
-  
+
   lifecycle {
     ignore_changes = [
-      client_authentication["sasl"],
+      client_authentication
     ]
   }
 
@@ -139,7 +139,8 @@ resource "aws_msk_cluster" "msk_kafka" {
       certificate_authority_arns = length(var.ca_arn) != 0 ? var.ca_arn : [aws_acmpca_certificate_authority.msk_kafka_with_ca[count.index].arn]
     }
     sasl {
-      iam = var.iam_authentication
+      iam   = var.iam_authentication
+      scram = var.scram_authentication
     }
   }
 
@@ -204,7 +205,7 @@ resource "aws_msk_cluster" "msk_kafka_with_config" {
 
   lifecycle {
     ignore_changes = [
-      client_authentication["sasl"],
+      client_authentication
     ]
   }
 
@@ -213,7 +214,8 @@ resource "aws_msk_cluster" "msk_kafka_with_config" {
       certificate_authority_arns = length(var.ca_arn) != 0 ? var.ca_arn : [aws_acmpca_certificate_authority.msk_kafka_ca_with_config[count.index].arn]
     }
     sasl {
-      iam = var.iam_authentication
+      iam   = var.iam_authentication
+      scram = var.scram_authentication
     }
   }
 
@@ -423,17 +425,17 @@ resource "aws_iam_policy_attachment" "msk_iam_policy_attachment" {
 }
 
 resource "aws_iam_policy" "msk_iam_authentication" {
-  count = var.iam_authentication ? 1 : 0
-  name = "${var.name}-iam-auth-policy"
+  count       = var.iam_authentication ? 1 : 0
+  name        = "${var.name}-iam-auth-policy"
   description = "This policy allow IAM authenticated user to connect to MSK"
-  policy = data.aws_iam_policy_document.msk_iam_authentication_document.json
+  policy      = data.aws_iam_policy_document.msk_iam_authentication_document.json
 }
 
 
 resource "aws_iam_policy_attachment" "msk_iam_authentication_policy" {
-  count = var.iam_authentication ? 1 : 0
-  name = "${var.name}-authentication-policy-attachment"
-  users = [ aws_iam_user.msk_iam_user.name ]
+  count      = var.iam_authentication ? 1 : 0
+  name       = "${var.name}-authentication-policy-attachment"
+  users      = [aws_iam_user.msk_iam_user.name]
   policy_arn = aws_iam_policy.msk_iam_authentication[count.index].arn
 }
 

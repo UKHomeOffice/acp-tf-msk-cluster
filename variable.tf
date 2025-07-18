@@ -168,6 +168,12 @@ variable "logging_broker_s3" {
 
 variable "iam_authentication" {
   description = "Enables IAM client authentication"
-  type = bool
-  default = false
+  type        = bool
+  default     = false
+}
+
+variable "scram_authentication" {
+  description = "Enables scram client authentication"
+  type        = bool
+  default     = false
 }
