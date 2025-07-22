@@ -62,13 +62,13 @@ module "msk_cluster_with_config" {
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~> 3.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | 3.76.1 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | ~> 3.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 3.76.1 |
 
 ## Modules
 
@@ -80,28 +80,28 @@ module "msk_cluster_with_config" {
 
 | Name | Type |
 |------|------|
-| [aws_acmpca_certificate_authority.msk_kafka_ca_with_config](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/acmpca_certificate_authority) | resource |
-| [aws_acmpca_certificate_authority.msk_kafka_with_ca](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/acmpca_certificate_authority) | resource |
-| [aws_appautoscaling_policy.msk_appautoscaling_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/appautoscaling_policy) | resource |
-| [aws_appautoscaling_target.msk_appautoscaling_target](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/appautoscaling_target) | resource |
-| [aws_iam_policy.acmpca_policy_with_msk_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy) | resource |
-| [aws_iam_policy.msk_iam_authentication](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy) | resource |
-| [aws_iam_policy.msk_iam_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy) | resource |
-| [aws_iam_policy_attachment.msk_acmpca_iam_policy_attachment](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy_attachment) | resource |
-| [aws_iam_policy_attachment.msk_iam_authentication_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy_attachment) | resource |
-| [aws_iam_policy_attachment.msk_iam_policy_attachment](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy_attachment) | resource |
-| [aws_iam_user.msk_acmpca_iam_user](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_user) | resource |
-| [aws_iam_user.msk_iam_user](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_user) | resource |
-| [aws_kms_alias.msk_cluster_kms_alias](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kms_alias) | resource |
-| [aws_kms_key.kms](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kms_key) | resource |
-| [aws_msk_cluster.msk_kafka](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/msk_cluster) | resource |
-| [aws_msk_cluster.msk_kafka_with_config](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/msk_cluster) | resource |
-| [aws_msk_configuration.msk_kafka_config](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/msk_configuration) | resource |
-| [aws_security_group.sg_msk](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
-| [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
-| [aws_iam_policy_document.kms_key_policy_document](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
-| [aws_iam_policy_document.msk_iam_authentication_document](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
-| [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
+| [aws_acmpca_certificate_authority.msk_kafka_ca_with_config](https://registry.terraform.io/providers/hashicorp/aws/3.76.1/docs/resources/acmpca_certificate_authority) | resource |
+| [aws_acmpca_certificate_authority.msk_kafka_with_ca](https://registry.terraform.io/providers/hashicorp/aws/3.76.1/docs/resources/acmpca_certificate_authority) | resource |
+| [aws_appautoscaling_policy.msk_appautoscaling_policy](https://registry.terraform.io/providers/hashicorp/aws/3.76.1/docs/resources/appautoscaling_policy) | resource |
+| [aws_appautoscaling_target.msk_appautoscaling_target](https://registry.terraform.io/providers/hashicorp/aws/3.76.1/docs/resources/appautoscaling_target) | resource |
+| [aws_iam_policy.acmpca_policy_with_msk_policy](https://registry.terraform.io/providers/hashicorp/aws/3.76.1/docs/resources/iam_policy) | resource |
+| [aws_iam_policy.msk_iam_authentication](https://registry.terraform.io/providers/hashicorp/aws/3.76.1/docs/resources/iam_policy) | resource |
+| [aws_iam_policy.msk_iam_policy](https://registry.terraform.io/providers/hashicorp/aws/3.76.1/docs/resources/iam_policy) | resource |
+| [aws_iam_policy_attachment.msk_acmpca_iam_policy_attachment](https://registry.terraform.io/providers/hashicorp/aws/3.76.1/docs/resources/iam_policy_attachment) | resource |
+| [aws_iam_policy_attachment.msk_iam_authentication_policy](https://registry.terraform.io/providers/hashicorp/aws/3.76.1/docs/resources/iam_policy_attachment) | resource |
+| [aws_iam_policy_attachment.msk_iam_policy_attachment](https://registry.terraform.io/providers/hashicorp/aws/3.76.1/docs/resources/iam_policy_attachment) | resource |
+| [aws_iam_user.msk_acmpca_iam_user](https://registry.terraform.io/providers/hashicorp/aws/3.76.1/docs/resources/iam_user) | resource |
+| [aws_iam_user.msk_iam_user](https://registry.terraform.io/providers/hashicorp/aws/3.76.1/docs/resources/iam_user) | resource |
+| [aws_kms_alias.msk_cluster_kms_alias](https://registry.terraform.io/providers/hashicorp/aws/3.76.1/docs/resources/kms_alias) | resource |
+| [aws_kms_key.kms](https://registry.terraform.io/providers/hashicorp/aws/3.76.1/docs/resources/kms_key) | resource |
+| [aws_msk_cluster.msk_kafka](https://registry.terraform.io/providers/hashicorp/aws/3.76.1/docs/resources/msk_cluster) | resource |
+| [aws_msk_cluster.msk_kafka_with_config](https://registry.terraform.io/providers/hashicorp/aws/3.76.1/docs/resources/msk_cluster) | resource |
+| [aws_msk_configuration.msk_kafka_config](https://registry.terraform.io/providers/hashicorp/aws/3.76.1/docs/resources/msk_configuration) | resource |
+| [aws_security_group.sg_msk](https://registry.terraform.io/providers/hashicorp/aws/3.76.1/docs/resources/security_group) | resource |
+| [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/3.76.1/docs/data-sources/caller_identity) | data source |
+| [aws_iam_policy_document.kms_key_policy_document](https://registry.terraform.io/providers/hashicorp/aws/3.76.1/docs/data-sources/iam_policy_document) | data source |
+| [aws_iam_policy_document.msk_iam_authentication_document](https://registry.terraform.io/providers/hashicorp/aws/3.76.1/docs/data-sources/iam_policy_document) | data source |
+| [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/3.76.1/docs/data-sources/region) | data source |
 
 ## Inputs
 
@@ -110,7 +110,7 @@ module "msk_cluster_with_config" {
 | <a name="input_acmpca_iam_user_name"></a> [acmpca\_iam\_user\_name](#input\_acmpca\_iam\_user\_name) | The name of the IAM user assigned to the created AWS Private CA | `string` | `""` | no |
 | <a name="input_ca_arn"></a> [ca\_arn](#input\_ca\_arn) | ARN of the AWS managed CA to attach to the MSK cluster | `list(string)` | `[]` | no |
 | <a name="input_certificateauthority"></a> [certificateauthority](#input\_certificateauthority) | Should a CA be created with the MSK cluster? | `bool` | `false` | no |
-| <a name="input_cidr_blocks"></a> [cidr\_blocks](#input\_cidr\_blocks) | The CIDR blocks that the MSK cluster allows ingress connections from | `list(string)` | <pre>[<br/>  "0.0.0.0/0"<br/>]</pre> | no |
+| <a name="input_cidr_blocks"></a> [cidr\_blocks](#input\_cidr\_blocks) | The CIDR blocks that the MSK cluster allows ingress connections from | `list(string)` | <pre>[<br>  "0.0.0.0/0"<br>]</pre> | no |
 | <a name="input_config_arn"></a> [config\_arn](#input\_config\_arn) | ARN of the MSK configuration to attach to the MSK cluster | `string` | `""` | no |
 | <a name="input_config_description"></a> [config\_description](#input\_config\_description) | The description of the MSK configuration | `string` | `""` | no |
 | <a name="input_config_kafka_versions"></a> [config\_kafka\_versions](#input\_config\_kafka\_versions) | A list of Kafka versions that the configuration supports | `list(string)` | `[]` | no |
@@ -125,7 +125,7 @@ module "msk_cluster_with_config" {
 | <a name="input_iam_authentication"></a> [iam\_authentication](#input\_iam\_authentication) | Enables IAM client authentication | `bool` | `false` | no |
 | <a name="input_kafka_version"></a> [kafka\_version](#input\_kafka\_version) | The Kafka version for the AWS MSK cluster | `string` | `"2.2.1"` | no |
 | <a name="input_key_rotation"></a> [key\_rotation](#input\_key\_rotation) | Enable email notifications for old IAM keys. | `string` | `"true"` | no |
-| <a name="input_logging_broker_s3"></a> [logging\_broker\_s3](#input\_logging\_broker\_s3) | Configuration block for Broker Logs settings for s3. | <pre>object({<br/>    enabled = bool<br/>    bucket  = string<br/>    prefix  = string<br/>  })</pre> | `null` | no |
+| <a name="input_logging_broker_s3"></a> [logging\_broker\_s3](#input\_logging\_broker\_s3) | Configuration block for Broker Logs settings for s3. | <pre>object({<br>    enabled = bool<br>    bucket  = string<br>    prefix  = string<br>  })</pre> | `null` | no |
 | <a name="input_msk_instance_type"></a> [msk\_instance\_type](#input\_msk\_instance\_type) | The MSK cluster instance type | `any` | n/a | yes |
 | <a name="input_name"></a> [name](#input\_name) | Name of the MSK cluster | `any` | n/a | yes |
 | <a name="input_number_of_broker_nodes"></a> [number\_of\_broker\_nodes](#input\_number\_of\_broker\_nodes) | The number of broker nodes running in the MSK cluster | `any` | n/a | yes |
