@@ -62,7 +62,7 @@ module "msk_cluster_with_config" {
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | 3.76.1 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~>3.70 |
 
 ## Providers
 
@@ -80,28 +80,28 @@ module "msk_cluster_with_config" {
 
 | Name | Type |
 |------|------|
-| [aws_acmpca_certificate_authority.msk_kafka_ca_with_config](https://registry.terraform.io/providers/hashicorp/aws/3.76.1/docs/resources/acmpca_certificate_authority) | resource |
-| [aws_acmpca_certificate_authority.msk_kafka_with_ca](https://registry.terraform.io/providers/hashicorp/aws/3.76.1/docs/resources/acmpca_certificate_authority) | resource |
-| [aws_appautoscaling_policy.msk_appautoscaling_policy](https://registry.terraform.io/providers/hashicorp/aws/3.76.1/docs/resources/appautoscaling_policy) | resource |
-| [aws_appautoscaling_target.msk_appautoscaling_target](https://registry.terraform.io/providers/hashicorp/aws/3.76.1/docs/resources/appautoscaling_target) | resource |
-| [aws_iam_policy.acmpca_policy_with_msk_policy](https://registry.terraform.io/providers/hashicorp/aws/3.76.1/docs/resources/iam_policy) | resource |
-| [aws_iam_policy.msk_iam_authentication](https://registry.terraform.io/providers/hashicorp/aws/3.76.1/docs/resources/iam_policy) | resource |
-| [aws_iam_policy.msk_iam_policy](https://registry.terraform.io/providers/hashicorp/aws/3.76.1/docs/resources/iam_policy) | resource |
-| [aws_iam_policy_attachment.msk_acmpca_iam_policy_attachment](https://registry.terraform.io/providers/hashicorp/aws/3.76.1/docs/resources/iam_policy_attachment) | resource |
-| [aws_iam_policy_attachment.msk_iam_authentication_policy](https://registry.terraform.io/providers/hashicorp/aws/3.76.1/docs/resources/iam_policy_attachment) | resource |
-| [aws_iam_policy_attachment.msk_iam_policy_attachment](https://registry.terraform.io/providers/hashicorp/aws/3.76.1/docs/resources/iam_policy_attachment) | resource |
-| [aws_iam_user.msk_acmpca_iam_user](https://registry.terraform.io/providers/hashicorp/aws/3.76.1/docs/resources/iam_user) | resource |
-| [aws_iam_user.msk_iam_user](https://registry.terraform.io/providers/hashicorp/aws/3.76.1/docs/resources/iam_user) | resource |
-| [aws_kms_alias.msk_cluster_kms_alias](https://registry.terraform.io/providers/hashicorp/aws/3.76.1/docs/resources/kms_alias) | resource |
-| [aws_kms_key.kms](https://registry.terraform.io/providers/hashicorp/aws/3.76.1/docs/resources/kms_key) | resource |
-| [aws_msk_cluster.msk_kafka](https://registry.terraform.io/providers/hashicorp/aws/3.76.1/docs/resources/msk_cluster) | resource |
-| [aws_msk_cluster.msk_kafka_with_config](https://registry.terraform.io/providers/hashicorp/aws/3.76.1/docs/resources/msk_cluster) | resource |
-| [aws_msk_configuration.msk_kafka_config](https://registry.terraform.io/providers/hashicorp/aws/3.76.1/docs/resources/msk_configuration) | resource |
-| [aws_security_group.sg_msk](https://registry.terraform.io/providers/hashicorp/aws/3.76.1/docs/resources/security_group) | resource |
-| [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/3.76.1/docs/data-sources/caller_identity) | data source |
-| [aws_iam_policy_document.kms_key_policy_document](https://registry.terraform.io/providers/hashicorp/aws/3.76.1/docs/data-sources/iam_policy_document) | data source |
-| [aws_iam_policy_document.msk_iam_authentication_document](https://registry.terraform.io/providers/hashicorp/aws/3.76.1/docs/data-sources/iam_policy_document) | data source |
-| [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/3.76.1/docs/data-sources/region) | data source |
+| [aws_acmpca_certificate_authority.msk_kafka_ca_with_config](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/acmpca_certificate_authority) | resource |
+| [aws_acmpca_certificate_authority.msk_kafka_with_ca](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/acmpca_certificate_authority) | resource |
+| [aws_appautoscaling_policy.msk_appautoscaling_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/appautoscaling_policy) | resource |
+| [aws_appautoscaling_target.msk_appautoscaling_target](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/appautoscaling_target) | resource |
+| [aws_iam_policy.acmpca_policy_with_msk_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy) | resource |
+| [aws_iam_policy.msk_iam_authentication](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy) | resource |
+| [aws_iam_policy.msk_iam_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy) | resource |
+| [aws_iam_policy_attachment.msk_acmpca_iam_policy_attachment](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy_attachment) | resource |
+| [aws_iam_policy_attachment.msk_iam_authentication_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy_attachment) | resource |
+| [aws_iam_policy_attachment.msk_iam_policy_attachment](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy_attachment) | resource |
+| [aws_iam_user.msk_acmpca_iam_user](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_user) | resource |
+| [aws_iam_user.msk_iam_user](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_user) | resource |
+| [aws_kms_alias.msk_cluster_kms_alias](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kms_alias) | resource |
+| [aws_kms_key.kms](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kms_key) | resource |
+| [aws_msk_cluster.msk_kafka](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/msk_cluster) | resource |
+| [aws_msk_cluster.msk_kafka_with_config](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/msk_cluster) | resource |
+| [aws_msk_configuration.msk_kafka_config](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/msk_configuration) | resource |
+| [aws_security_group.sg_msk](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
+| [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
+| [aws_iam_policy_document.kms_key_policy_document](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
+| [aws_iam_policy_document.msk_iam_authentication_document](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
+| [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
 
 ## Inputs
 
