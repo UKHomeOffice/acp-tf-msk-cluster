@@ -68,7 +68,7 @@ module "msk_cluster_with_config" {
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 3.76.1 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | ~>3.70 |
 
 ## Modules
 
@@ -110,7 +110,7 @@ module "msk_cluster_with_config" {
 | <a name="input_acmpca_iam_user_name"></a> [acmpca\_iam\_user\_name](#input\_acmpca\_iam\_user\_name) | The name of the IAM user assigned to the created AWS Private CA | `string` | `""` | no |
 | <a name="input_ca_arn"></a> [ca\_arn](#input\_ca\_arn) | ARN of the AWS managed CA to attach to the MSK cluster | `list(string)` | `[]` | no |
 | <a name="input_certificateauthority"></a> [certificateauthority](#input\_certificateauthority) | Should a CA be created with the MSK cluster? | `bool` | `false` | no |
-| <a name="input_cidr_blocks"></a> [cidr\_blocks](#input\_cidr\_blocks) | The CIDR blocks that the MSK cluster allows ingress connections from | `list(string)` | <pre>[<br>  "0.0.0.0/0"<br>]</pre> | no |
+| <a name="input_cidr_blocks"></a> [cidr\_blocks](#input\_cidr\_blocks) | The CIDR blocks that the MSK cluster allows ingress connections from | `list(string)` | <pre>[<br/>  "0.0.0.0/0"<br/>]</pre> | no |
 | <a name="input_config_arn"></a> [config\_arn](#input\_config\_arn) | ARN of the MSK configuration to attach to the MSK cluster | `string` | `""` | no |
 | <a name="input_config_description"></a> [config\_description](#input\_config\_description) | The description of the MSK configuration | `string` | `""` | no |
 | <a name="input_config_kafka_versions"></a> [config\_kafka\_versions](#input\_config\_kafka\_versions) | A list of Kafka versions that the configuration supports | `list(string)` | `[]` | no |
@@ -119,14 +119,14 @@ module "msk_cluster_with_config" {
 | <a name="input_config_server_properties"></a> [config\_server\_properties](#input\_config\_server\_properties) | The properties to set on the MSK cluster. Omitted properties are set to a default value | `string` | `""` | no |
 | <a name="input_ebs_volume_size"></a> [ebs\_volume\_size](#input\_ebs\_volume\_size) | The MSK cluster EBS volume size for each broker | `any` | n/a | yes |
 | <a name="input_email_addresses"></a> [email\_addresses](#input\_email\_addresses) | A list of email addresses for key rotation notifications. | `list(string)` | `[]` | no |
-| <a name="input_enable_kms_key_rotation"></a> [enable_kms_key_rotation](#input_enable_kms_key_rotation) | Enable automatic annual rotation of the MSK KMS key. Recommended for security best practice. | `bool` | `false` | no |
+| <a name="input_enable_kms_key_rotation"></a> [enable\_kms\_key\_rotation](#input\_enable\_kms\_key\_rotation) | Enable automatic rotation of the MSK KMS key | `bool` | `false` | no |
 | <a name="input_encryption_at_rest_kms_key_arn"></a> [encryption\_at\_rest\_kms\_key\_arn](#input\_encryption\_at\_rest\_kms\_key\_arn) | Use to set custom KMS key to encrypt data written to EBS volume | `any` | `null` | no |
 | <a name="input_enhanced_monitoring"></a> [enhanced\_monitoring](#input\_enhanced\_monitoring) | The desired enhanced MSK CloudWatch monitoring level | `string` | `"DEFAULT"` | no |
 | <a name="input_environment"></a> [environment](#input\_environment) | The environment the MSK cluster is running in i.e. dev, prod etc | `any` | n/a | yes |
 | <a name="input_iam_authentication"></a> [iam\_authentication](#input\_iam\_authentication) | Enables IAM client authentication | `bool` | `false` | no |
 | <a name="input_kafka_version"></a> [kafka\_version](#input\_kafka\_version) | The Kafka version for the AWS MSK cluster | `string` | `"2.2.1"` | no |
 | <a name="input_key_rotation"></a> [key\_rotation](#input\_key\_rotation) | Enable email notifications for old IAM keys. | `string` | `"true"` | no |
-| <a name="input_logging_broker_s3"></a> [logging\_broker\_s3](#input\_logging\_broker\_s3) | Configuration block for Broker Logs settings for s3. | <pre>object({<br>    enabled = bool<br>    bucket  = string<br>    prefix  = string<br>  })</pre> | `null` | no |
+| <a name="input_logging_broker_s3"></a> [logging\_broker\_s3](#input\_logging\_broker\_s3) | Configuration block for Broker Logs settings for s3. | <pre>object({<br/>    enabled = bool<br/>    bucket  = string<br/>    prefix  = string<br/>  })</pre> | `null` | no |
 | <a name="input_msk_instance_type"></a> [msk\_instance\_type](#input\_msk\_instance\_type) | The MSK cluster instance type | `any` | n/a | yes |
 | <a name="input_name"></a> [name](#input\_name) | Name of the MSK cluster | `any` | n/a | yes |
 | <a name="input_number_of_broker_nodes"></a> [number\_of\_broker\_nodes](#input\_number\_of\_broker\_nodes) | The number of broker nodes running in the MSK cluster | `any` | n/a | yes |
