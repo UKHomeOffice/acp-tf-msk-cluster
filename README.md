@@ -138,7 +138,6 @@ module "msk_cluster_with_config" {
 | <a name="input_tags"></a> [tags](#input\_tags) | A map of tags to add to all resources | `map(string)` | `{}` | no |
 | <a name="input_type"></a> [type](#input\_type) | The type of the certificate authority | `string` | `""` | no |
 | <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | The MSK cluster's VPC ID | `any` | n/a | yes |
-| <a name="input_enable_kms_key_rotation"></a> [enable_kms_key_rotation](#input_enable_kms_key_rotation) | Enable automatic annual rotation of the MSK KMS key. Recommended for security best practice. | `bool` | `false` | no |git
 
 ## Outputs
 
