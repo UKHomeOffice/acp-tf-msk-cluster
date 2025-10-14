@@ -92,10 +92,10 @@ resource "aws_security_group" "sg_msk" {
 }
 
 resource "aws_kms_key" "kms" {
-  count       = var.encryption_at_rest_kms_key_arn == null ? 1 : 0
-  description = "msk cluster kms key"
+  count               = var.encryption_at_rest_kms_key_arn == null ? 1 : 0
+  description         = "msk cluster kms key"
   enable_key_rotation = var.enable_kms_key_rotation
-  policy      = data.aws_iam_policy_document.kms_key_policy_document.json
+  policy              = data.aws_iam_policy_document.kms_key_policy_document.json
   tags = merge(
     var.tags,
     {
