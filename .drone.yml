@@ -12,14 +12,18 @@ steps:
   pull: if-not-exists
   image: quay.io/ukhomeofficedigital/terraform-toolset:v1.1.7
   commands:
-  - 'echo "=== DEBUG: Full diff between current and generated ==="'
+  - 'echo "=== DEBUG: Original README.md content ==="'
+  - 'cat README.md'
+  - 'echo "=== DEBUG: Running terraform-docs ==="'
   - 'cp README.md README.md.backup'
   - 'terraform-docs md --output-file README.md . || true'
-  - 'echo "--- Current (backed up)"'
-  - 'echo "+++ Generated (new)"'
-  - 'diff -u README.md.backup README.md || echo "Diff shown above"'
-  - 'echo "=== DEBUG: Line count comparison ==="'
-  - 'wc -l README.md.backup README.md'
+  - 'echo "=== DEBUG: Generated README.md content ==="'
+  - 'cat README.md'
+  - 'echo "=== DEBUG: Binary diff check ==="'
+  - 'cmp README.md.backup README.md || echo "Files differ"'
+  - 'echo "=== DEBUG: Hex dump comparison ==="'
+  - 'xxd README.md.backup | head -5'
+  - 'xxd README.md | head -5'
   - 'echo "=== Now running actual validation ==="'
   - '/acp/scripts/tf-validate.sh'
   when:
