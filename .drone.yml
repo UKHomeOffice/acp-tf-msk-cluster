@@ -24,8 +24,14 @@ steps:
   - 'echo "=== DEBUG: Hex dump comparison ==="'
   - 'xxd README.md.backup | head -5'
   - 'xxd README.md | head -5'
+  - 'echo "=== DEBUG: Contents of tf-validate.sh script ==="'
+  - 'cat /acp/scripts/tf-validate.sh'
+  - 'echo "=== DEBUG: Simulating what tf-validate.sh does ==="'
+  - 'cp README.md README.md.before-validate'
   - 'echo "=== Now running actual validation ==="'
   - '/acp/scripts/tf-validate.sh'
+  - 'echo "=== DEBUG: What did validation script change? ==="'
+  - 'diff -u README.md.before-validate README.md || echo "No changes by validate script"'
   when:
     event:
     - pull_request
