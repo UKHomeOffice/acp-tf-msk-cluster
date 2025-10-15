@@ -7,6 +7,56 @@ This means that from module v1.8.0 onwards the **minimum supported Kafka version
 Should you require an older version of Kafka than you should use module version v1.7.x. However, the downside is that plaintext ports will be allowed on the older module version
 
 <!-- BEGIN_TF_DOCS -->
+## Usage
+
+### MSK Cluster
+```hcl
+module "msk_cluster" {
+  source = "git::https://github.com/UKHomeOffice/acp-tf-msk-cluster?ref=master"
+
+  name                   = "msktestcluster"
+  msk_instance_type      = "kafka.m5.large"
+  kafka_version          = "2.8.1"
+  environment            = var.environment
+  number_of_broker_nodes = "3"
+  subnet_ids             = data.aws_subnet_ids.compute.ids
+  vpc_id                 = var.vpc_id
+  ebs_volume_size        = "50"
+  cidr_blocks            = values(var.compute_cidrs)
+  # certificateauthority = true (This will fail on merge the first time it's executed, this is expected. Install the CA in the AWS console then restart the merge.)
+  # or
+  # ca_arn               = [module.<existing_cert>.ca_certificate_arn]
+}
+```
+
+### MSK Cluster with config
+```hcl
+module "msk_cluster_with_config" {
+  source = "git::https://github.com/UKHomeOffice/acp-tf-msk-cluster?ref=master"
+
+  name                        = "msktestclusterwithconfig"
+  msk_instance_type           = "kafka.m5.large"
+  kafka_version               = "2.8.1"
+  environment                 = var.environment
+  number_of_broker_nodes      = "3"
+  subnet_ids                  = data.aws_subnet_ids.compute.ids
+  vpc_id                      = var.vpc_id
+  ebs_volume_size             = "50"
+  cidr_blocks                 = values(var.compute_cidrs)
+  # certificateauthority      = true (This will fail on merge the first time it's executed, this is expected. Install the CA in the AWS console then restart the merge.)
+  # or
+  # ca_arn                    = [module.<existing_cert>.ca_certificate_arn]
+  config_name                 = "test-msk-config"
+  config_kafka_versions       = ["2.8.1"]
+  config_description          = "Test MSK configuration"
+
+  config_server_properties = <<PROPERTIES
+ auto.create.topics.enable = true
+ delete.topic.enable = true
+ PROPERTIES
+}
+```
+
 ## Requirements
 
 | Name | Version |
