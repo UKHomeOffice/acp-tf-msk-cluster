@@ -60,7 +60,7 @@ module "msk_cluster_with_config" {
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | ~>3.70 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 3.76.1 |
 
 ## Modules
 
