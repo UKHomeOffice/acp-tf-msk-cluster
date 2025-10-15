@@ -26,12 +26,18 @@ steps:
   - 'xxd README.md | head -5'
   - 'echo "=== DEBUG: Contents of tf-validate.sh script ==="'
   - 'cat /acp/scripts/tf-validate.sh'
-  - 'echo "=== DEBUG: Simulating what tf-validate.sh does ==="'
-  - 'cp README.md README.md.before-validate'
+  - 'echo "=== DEBUG: Manually simulating validation script logic ==="'
+  - 'tempfile_debug=$(mktemp /tmp/docs.XXXXXXXXX)'
+  - 'cp README.md $tempfile_debug'
+  - 'echo "Temp file before terraform-docs:"'
+  - 'head -5 $tempfile_debug'
+  - 'terraform-docs md --output-file $tempfile_debug .'
+  - 'echo "Temp file after terraform-docs:"'
+  - 'head -5 $tempfile_debug'
+  - 'echo "=== Diff between README and temp file ==="'
+  - 'diff -u README.md $tempfile_debug || echo "Files differ as shown above"'
   - 'echo "=== Now running actual validation ==="'
   - '/acp/scripts/tf-validate.sh'
-  - 'echo "=== DEBUG: What did validation script change? ==="'
-  - 'diff -u README.md.before-validate README.md || echo "No changes by validate script"'
   when:
     event:
     - pull_request
