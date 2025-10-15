@@ -6,6 +6,7 @@
 
 # Should you require an older version of Kafka than you should use module version v1.7.x. However, the downside is that plaintext ports will be allowed on the older module version
 
+# <!-- BEGIN_TF_DOCS -->
 /**
  ## Usage
  *
