@@ -4,9 +4,59 @@ As of Module version v1.8.0, Plaintext Ports are no longer allowed through the m
 
 This means that from module v1.8.0 onwards the **minimum supported Kafka version is 2.5.1**
 
-Should you require an older version of Kafka than you should use module version v1.7.x. However, the downside is that plaintext ports will be allowed on the older module version
+Should you require an older version of Kafka than you should use module version v1.7.x. However, the downside is that plaintext ports will be allowed on the older module version.
 
 <!-- BEGIN_TF_DOCS -->
+## Usage
+
+### MSK Cluster
+```hcl
+module "msk_cluster" {
+  source = "git::https://github.com/UKHomeOffice/acp-tf-msk-cluster?ref=master"
+
+  name                   = "msktestcluster"
+  msk_instance_type      = "kafka.m5.large"
+  kafka_version          = "2.8.1"
+  environment            = var.environment
+  number_of_broker_nodes = "3"
+  subnet_ids             = data.aws_subnet_ids.compute.ids
+  vpc_id                 = var.vpc_id
+  ebs_volume_size        = "50"
+  cidr_blocks            = values(var.compute_cidrs)
+  # certificateauthority = true (This will fail on merge the first time it's executed, this is expected. Install the CA in the AWS console then restart the merge.)
+  # or
+  # ca_arn               = [module.<existing_cert>.ca_certificate_arn]
+}
+```
+
+### MSK Cluster with config
+```hcl
+module "msk_cluster_with_config" {
+  source = "git::https://github.com/UKHomeOffice/acp-tf-msk-cluster?ref=master"
+
+  name                        = "msktestclusterwithconfig"
+  msk_instance_type           = "kafka.m5.large"
+  kafka_version               = "2.8.1"
+  environment                 = var.environment
+  number_of_broker_nodes      = "3"
+  subnet_ids                  = data.aws_subnet_ids.compute.ids
+  vpc_id                      = var.vpc_id
+  ebs_volume_size             = "50"
+  cidr_blocks                 = values(var.compute_cidrs)
+  # certificateauthority      = true (This will fail on merge the first time it's executed, this is expected. Install the CA in the AWS console then restart the merge.)
+  # or
+  # ca_arn                    = [module.<existing_cert>.ca_certificate_arn]
+  config_name                 = "test-msk-config"
+  config_kafka_versions       = ["2.8.1"]
+  config_description          = "Test MSK configuration"
+
+  config_server_properties = <<PROPERTIES
+ auto.create.topics.enable = true
+ delete.topic.enable = true
+ PROPERTIES
+}
+```
+
 ## Requirements
 
 | Name | Version |
@@ -18,7 +68,7 @@ Should you require an older version of Kafka than you should use module version 
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | ~>3.70 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 3.76.1 |
 
 ## Modules
 
@@ -60,7 +110,7 @@ Should you require an older version of Kafka than you should use module version 
 | <a name="input_acmpca_iam_user_name"></a> [acmpca\_iam\_user\_name](#input\_acmpca\_iam\_user\_name) | The name of the IAM user assigned to the created AWS Private CA | `string` | `""` | no |
 | <a name="input_ca_arn"></a> [ca\_arn](#input\_ca\_arn) | ARN of the AWS managed CA to attach to the MSK cluster | `list(string)` | `[]` | no |
 | <a name="input_certificateauthority"></a> [certificateauthority](#input\_certificateauthority) | Should a CA be created with the MSK cluster? | `bool` | `false` | no |
-| <a name="input_cidr_blocks"></a> [cidr\_blocks](#input\_cidr\_blocks) | The CIDR blocks that the MSK cluster allows ingress connections from | `list(string)` | <pre>[<br/>  "0.0.0.0/0"<br/>]</pre> | no |
+| <a name="input_cidr_blocks"></a> [cidr\_blocks](#input\_cidr\_blocks) | The CIDR blocks that the MSK cluster allows ingress connections from | `list(string)` | <pre>[<br>  "0.0.0.0/0"<br>]</pre> | no |
 | <a name="input_config_arn"></a> [config\_arn](#input\_config\_arn) | ARN of the MSK configuration to attach to the MSK cluster | `string` | `""` | no |
 | <a name="input_config_description"></a> [config\_description](#input\_config\_description) | The description of the MSK configuration | `string` | `""` | no |
 | <a name="input_config_kafka_versions"></a> [config\_kafka\_versions](#input\_config\_kafka\_versions) | A list of Kafka versions that the configuration supports | `list(string)` | `[]` | no |
@@ -76,7 +126,7 @@ Should you require an older version of Kafka than you should use module version 
 | <a name="input_iam_authentication"></a> [iam\_authentication](#input\_iam\_authentication) | Enables IAM client authentication | `bool` | `false` | no |
 | <a name="input_kafka_version"></a> [kafka\_version](#input\_kafka\_version) | The Kafka version for the AWS MSK cluster | `string` | `"2.2.1"` | no |
 | <a name="input_key_rotation"></a> [key\_rotation](#input\_key\_rotation) | Enable email notifications for old IAM keys. | `string` | `"true"` | no |
-| <a name="input_logging_broker_s3"></a> [logging\_broker\_s3](#input\_logging\_broker\_s3) | Configuration block for Broker Logs settings for s3. | <pre>object({<br/>    enabled = bool<br/>    bucket  = string<br/>    prefix  = string<br/>  })</pre> | `null` | no |
+| <a name="input_logging_broker_s3"></a> [logging\_broker\_s3](#input\_logging\_broker\_s3) | Configuration block for Broker Logs settings for s3. | <pre>object({<br>    enabled = bool<br>    bucket  = string<br>    prefix  = string<br>  })</pre> | `null` | no |
 | <a name="input_msk_instance_type"></a> [msk\_instance\_type](#input\_msk\_instance\_type) | The MSK cluster instance type | `any` | n/a | yes |
 | <a name="input_name"></a> [name](#input\_name) | Name of the MSK cluster | `any` | n/a | yes |
 | <a name="input_number_of_broker_nodes"></a> [number\_of\_broker\_nodes](#input\_number\_of\_broker\_nodes) | The number of broker nodes running in the MSK cluster | `any` | n/a | yes |
