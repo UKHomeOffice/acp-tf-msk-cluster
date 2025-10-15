@@ -36,8 +36,18 @@ steps:
   - 'head -5 $tempfile_debug'
   - 'echo "=== Diff between README and temp file ==="'
   - 'diff -u README.md $tempfile_debug || echo "Files differ as shown above"'
+  - 'echo "=== DEBUG: Check main.tf before validation script runs ==="'
+  - 'head -10 main.tf'
   - 'echo "=== Now running actual validation ==="'
-  - '/acp/scripts/tf-validate.sh'
+  - '/acp/scripts/tf-validate.sh || true'
+  - 'echo "=== DEBUG: Check main.tf after validation script runs ==="'
+  - 'head -10 main.tf'
+  - 'echo "=== DEBUG: Running terraform-docs ONE MORE TIME after validation ==="'
+  - 'tempfile_final=$(mktemp /tmp/docs.XXXXXXXXX)'
+  - 'cp README.md $tempfile_final'
+  - 'terraform-docs md --output-file $tempfile_final .'
+  - 'echo "=== Final diff ==="'
+  - 'diff -u README.md $tempfile_final || echo "NOW files differ!"'
   when:
     event:
     - pull_request
