@@ -12,6 +12,17 @@ steps:
   pull: if-not-exists
   image: quay.io/ukhomeofficedigital/terraform-toolset:v1.1.7
   commands:
+  - echo "=== DEBUG: Current README.md ==="
+  - head -20 README.md
+  - echo "=== DEBUG: Generated README.md ==="
+  - terraform-docs md . | head -20
+  - echo "=== DEBUG: Running terraform-docs and checking diff ==="
+  - terraform-docs md --output-file README.md . || true
+  - git diff README.md || echo "No diff found"
+  - echo "=== DEBUG: File info ==="
+  - file README.md
+  - wc -l README.md
+  - echo "=== Now running actual validation ==="
   - /acp/scripts/tf-validate.sh
   when:
     event:
