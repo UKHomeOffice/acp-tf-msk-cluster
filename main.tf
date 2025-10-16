@@ -128,6 +128,8 @@ resource "aws_msk_cluster" "msk_kafka" {
     security_groups = [aws_security_group.sg_msk.id]
   }
 
+  storage_mode = var.storage_mode
+
   lifecycle {
     ignore_changes = [
       client_authentication["sasl"],
