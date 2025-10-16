@@ -171,3 +171,9 @@ variable "iam_authentication" {
   type        = bool
   default     = false
 }
+
+variable "storage_mode" {
+  description = "Specify the storage mode for MSK brokers. Valid values: LOCAL (default) or TIERED."
+  type        = string
+  default     = "LOCAL"
+}
