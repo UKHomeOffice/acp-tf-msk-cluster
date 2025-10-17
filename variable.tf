@@ -171,3 +171,10 @@ variable "iam_authentication" {
   type        = bool
   default     = false
 }
+
+variable "enable_kms_key_rotation" {
+  description = "Enable automatic rotation of the MSK KMS key"
+  type        = bool
+  default     = false
+}
+ 

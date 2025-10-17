@@ -4,7 +4,7 @@ As of Module version v1.8.0, Plaintext Ports are no longer allowed through the m
 
 This means that from module v1.8.0 onwards the **minimum supported Kafka version is 2.5.1**
 
-Should you require an older version of Kafka than you should use module version v1.7.x. However, the downside is that plaintext ports will be allowed on the older module version
+Should you require an older version of Kafka than you should use module version v1.7.x. However, the downside is that plaintext ports will be allowed on the older module version.
 
 <!-- BEGIN_TF_DOCS -->
 ## Usage
@@ -119,6 +119,7 @@ module "msk_cluster_with_config" {
 | <a name="input_config_server_properties"></a> [config\_server\_properties](#input\_config\_server\_properties) | The properties to set on the MSK cluster. Omitted properties are set to a default value | `string` | `""` | no |
 | <a name="input_ebs_volume_size"></a> [ebs\_volume\_size](#input\_ebs\_volume\_size) | The MSK cluster EBS volume size for each broker | `any` | n/a | yes |
 | <a name="input_email_addresses"></a> [email\_addresses](#input\_email\_addresses) | A list of email addresses for key rotation notifications. | `list(string)` | `[]` | no |
+| <a name="input_enable_kms_key_rotation"></a> [enable\_kms\_key\_rotation](#input\_enable\_kms\_key\_rotation) | Enable automatic rotation of the MSK KMS key | `bool` | `false` | no |
 | <a name="input_encryption_at_rest_kms_key_arn"></a> [encryption\_at\_rest\_kms\_key\_arn](#input\_encryption\_at\_rest\_kms\_key\_arn) | Use to set custom KMS key to encrypt data written to EBS volume | `any` | `null` | no |
 | <a name="input_enhanced_monitoring"></a> [enhanced\_monitoring](#input\_enhanced\_monitoring) | The desired enhanced MSK CloudWatch monitoring level | `string` | `"DEFAULT"` | no |
 | <a name="input_environment"></a> [environment](#input\_environment) | The environment the MSK cluster is running in i.e. dev, prod etc | `any` | n/a | yes |
