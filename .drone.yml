@@ -12,8 +12,7 @@ steps:
   pull: if-not-exists
   image: quay.io/ukhomeofficedigital/terraform-toolset:v1.1.7
   commands:
-  - terraform init
-  - cat .terraform.lock.hcl
+  - /acp/scripts/tf-validate.sh
   when:
     event:
     - pull_request
