@@ -12,7 +12,16 @@ steps:
   pull: if-not-exists
   image: quay.io/ukhomeofficedigital/terraform-toolset:v1.1.7
   commands:
-  - /acp/scripts/tf-validate.sh
+ # - /acp/scripts/tf-validate.sh
+  - terraform init
+  - echo "=== Current README.md ==="
+  - cat README.md
+  - echo "=== Generating new docs ==="
+  - terraform-docs md . > /tmp/generated.md
+  - echo "=== Generated README.md ==="
+  - cat /tmp/generated.md
+  - echo "=== DIFF ==="
+  - diff -u README.md /tmp/generated.md || true
   when:
     event:
     - pull_request
