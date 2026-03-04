@@ -454,7 +454,7 @@ resource "aws_iam_policy_attachment" "msk_iam_authentication_policy" {
 }
 
 module "self_serve_access_keys" {
-  source = "git::https://github.com/UKHomeOffice/acp-tf-self-serve-access-keys?ref=v0.1.0"
+  source = "git::https://github.com/UKHomeOffice/acp-tf-self-serve-access-keys?ref=v0.2.0"
 
   user_names = concat(aws_iam_user.msk_acmpca_iam_user.*.name, aws_iam_user.msk_iam_user.*.name)
 }
