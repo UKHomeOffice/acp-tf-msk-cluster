@@ -179,8 +179,12 @@ variable "enable_kms_key_rotation" {
 }
 
 variable "storage_mode" {
-  description = "Specify the storage mode for MSK brokers. Valid values: LOCAL (default) or TIERED."
+  description = "Specify the storage mode for MSK brokers. Valid values: LOCAL (default) or TIERED. TIERED requires Kafka version 3.6.0 or higher and cannot be reverted to LOCAL once enabled."
   type        = string
   default     = "LOCAL"
+  validation {
+    condition     = contains(["LOCAL", "TIERED"], var.storage_mode)
+    error_message = "storage_mode must be either LOCAL or TIERED."
+  }
 }
  
