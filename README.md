@@ -61,7 +61,7 @@ module "msk_cluster_with_config" {
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.2 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~>4.40 |
 
 ## Providers
@@ -134,7 +134,7 @@ module "msk_cluster_with_config" {
 | <a name="input_prometheus_node_exporter_enabled"></a> [prometheus\_node\_exporter\_enabled](#input\_prometheus\_node\_exporter\_enabled) | Enable Prometheus open monitoring for the node exporter | `bool` | `false` | no |
 | <a name="input_storage_autoscaling_max_capacity"></a> [storage\_autoscaling\_max\_capacity](#input\_storage\_autoscaling\_max\_capacity) | The MSK cluster EBS maximum volume size for each broker. Value between 1 and 16384. | `number` | `1` | no |
 | <a name="input_storage_autoscaling_threshold"></a> [storage\_autoscaling\_threshold](#input\_storage\_autoscaling\_threshold) | The percentage threshold that needs to be exceeded to trigger a scale up. Value between 10 and 80. | `number` | `65` | no |
-| <a name="input_storage_mode"></a> [storage\_mode](#input\_storage\_mode) | Specify the storage mode for MSK brokers. Valid values: LOCAL (default) or TIERED. | `string` | `"LOCAL"` | no |
+| <a name="input_storage_mode"></a> [storage\_mode](#input\_storage\_mode) | Specify the storage mode for MSK brokers. Valid values: LOCAL (default) or TIERED. Note: TIERED requires Kafka version 3.6.0 or higher and cannot be reverted to LOCAL once enabled. | `string` | `"LOCAL"` | no |
 | <a name="input_subnet_ids"></a> [subnet\_ids](#input\_subnet\_ids) | A list of subnets that the MSK cluster should run in | `list(string)` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | A map of tags to add to all resources | `map(string)` | `{}` | no |
 | <a name="input_type"></a> [type](#input\_type) | The type of the certificate authority | `string` | `""` | no |
