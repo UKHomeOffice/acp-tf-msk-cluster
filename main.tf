@@ -135,6 +135,14 @@ resource "aws_msk_cluster" "msk_kafka" {
     ignore_changes = [
       client_authentication["sasl"],
     ]
+    precondition {
+      condition = (
+        var.storage_mode != "TIERED" ||
+        tonumber(split(".", var.kafka_version)[0]) > 3 ||
+        (tonumber(split(".", var.kafka_version)[0]) == 3 && tonumber(split(".", var.kafka_version)[1]) >= 6)
+      )
+      error_message = "MSK tiered storage requires Kafka version 3.6.0 or higher. Current kafka_version is ${var.kafka_version}."
+    }
   }
 
   client_authentication {
@@ -211,10 +219,20 @@ resource "aws_msk_cluster" "msk_kafka_with_config" {
     security_groups = [aws_security_group.sg_msk.id]
   }
 
+  storage_mode = var.storage_mode
+
   lifecycle {
     ignore_changes = [
       client_authentication["sasl"],
     ]
+    precondition {
+      condition = (
+        var.storage_mode != "TIERED" ||
+        tonumber(split(".", var.kafka_version)[0]) > 3 ||
+        (tonumber(split(".", var.kafka_version)[0]) == 3 && tonumber(split(".", var.kafka_version)[1]) >= 6)
+      )
+      error_message = "MSK tiered storage requires Kafka version 3.6.0 or higher. Current kafka_version is ${var.kafka_version}."
+    }
   }
 
   client_authentication {

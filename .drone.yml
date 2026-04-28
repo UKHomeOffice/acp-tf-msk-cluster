@@ -9,8 +9,8 @@ platform:
 
 steps:
 - name: validate
-  pull: if-not-exists
-  image: quay.io/ukhomeofficedigital/terraform-toolset:v1.1.7
+  pull: always
+  image: quay.io/ukhomeofficedigital/terraform-toolset:v1.12.2
   commands:
   - /acp/scripts/tf-validate.sh
   when:
