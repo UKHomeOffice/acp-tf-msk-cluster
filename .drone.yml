@@ -8,6 +8,17 @@ platform:
   arch: amd64
 
 steps:
+- name: docs-diff
+  pull: always
+  image: quay.io/ukhomeofficedigital/terraform-toolset:v1.12.2
+  commands:
+  - terraform-docs md . > /tmp/expected-readme.md
+  - diff README.md /tmp/expected-readme.md || true
+  when:
+    event:
+    - pull_request
+    - push
+
 - name: validate
   pull: always
   image: quay.io/ukhomeofficedigital/terraform-toolset:v1.12.2
