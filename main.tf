@@ -132,6 +132,8 @@ resource "aws_msk_cluster" "msk_kafka" {
   storage_mode = var.storage_mode
 
   lifecycle {
+    prevent_destroy = var.deletion_protection
+
     ignore_changes = [
       client_authentication["sasl"],
     ]
@@ -222,6 +224,8 @@ resource "aws_msk_cluster" "msk_kafka_with_config" {
   storage_mode = var.storage_mode
 
   lifecycle {
+    prevent_destroy = var.deletion_protection
+
     ignore_changes = [
       client_authentication["sasl"],
     ]

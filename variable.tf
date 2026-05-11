@@ -187,4 +187,10 @@ variable "storage_mode" {
     error_message = "storage_mode must be either LOCAL or TIERED."
   }
 }
+
+variable "deletion_protection" {
+  description = "Prevent accidental deletion of MSK cluster"
+  type        = bool
+  default     = true
+}
  
