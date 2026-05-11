@@ -121,6 +121,7 @@ resource "aws_msk_cluster" "msk_kafka" {
   kafka_version          = var.kafka_version
   number_of_broker_nodes = var.number_of_broker_nodes
   enhanced_monitoring    = var.enhanced_monitoring
+  deletion_protection = var.deletion_protection
 
   broker_node_group_info {
     instance_type   = var.msk_instance_type
@@ -132,8 +133,6 @@ resource "aws_msk_cluster" "msk_kafka" {
   storage_mode = var.storage_mode
 
   lifecycle {
-    prevent_destroy = var.deletion_protection
-
     ignore_changes = [
       client_authentication["sasl"],
     ]
@@ -213,6 +212,7 @@ resource "aws_msk_cluster" "msk_kafka_with_config" {
   kafka_version          = var.kafka_version
   number_of_broker_nodes = var.number_of_broker_nodes
   enhanced_monitoring    = var.enhanced_monitoring
+  deletion_protection = var.deletion_protection
 
   broker_node_group_info {
     instance_type   = var.msk_instance_type
@@ -224,8 +224,6 @@ resource "aws_msk_cluster" "msk_kafka_with_config" {
   storage_mode = var.storage_mode
 
   lifecycle {
-    prevent_destroy = var.deletion_protection
-
     ignore_changes = [
       client_authentication["sasl"],
     ]
