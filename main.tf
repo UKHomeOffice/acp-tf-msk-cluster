@@ -132,6 +132,7 @@ resource "aws_msk_cluster" "msk_kafka" {
   storage_mode = var.storage_mode
 
   lifecycle {
+    # TODO: Replace with AWS native deletion_protection when provider is upgraded
     prevent_destroy = true
 
     ignore_changes = [
@@ -224,6 +225,7 @@ resource "aws_msk_cluster" "msk_kafka_with_config" {
   storage_mode = var.storage_mode
 
   lifecycle {
+    # TODO: Replace with AWS native deletion_protection when provider is upgraded
     prevent_destroy = true
 
     ignore_changes = [

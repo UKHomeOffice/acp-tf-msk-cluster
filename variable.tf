@@ -189,7 +189,14 @@ variable "storage_mode" {
 }
 
 variable "deletion_protection" {
-  description = "Prevent accidental deletion of MSK cluster"
+  description = "Indicates whether deletion protection should be enabled.
+
+  Note:
+  Due to the AWS provider version being old, this module always enforces protection using `prevent_destroy`, which cannot be dynamically toggled.
+
+  To destroy the cluster:
+  1. Temporarily remove or comment out the lifecycle block
+  2. Run terraform apply
   type        = bool
   default     = true
 }
