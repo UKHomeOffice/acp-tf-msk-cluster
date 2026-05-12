@@ -117,8 +117,8 @@ module "msk_cluster_with_config" {
 | <a name="input_config_name"></a> [config\_name](#input\_config\_name) | Name of the MSK configuration to attach to the MSK cluster | `string` | `""` | no |
 | <a name="input_config_revision"></a> [config\_revision](#input\_config\_revision) | The revision of the MSK configuration to use | `string` | `""` | no |
 | <a name="input_config_server_properties"></a> [config\_server\_properties](#input\_config\_server\_properties) | The properties to set on the MSK cluster. Omitted properties are set to a default value | `string` | `""` | no |
-| <a name="input_deletion_protection"></a> [deletion\_protection](#input\_deletion\_protection) | Prevent accidental deletion of MSK cluster | `bool` | `true` | no |
-| <a name="input_ebs_volume_size"></a> [ebs\_volume\_size](#input\_ebs\_volume\_size) | The MSK cluster EBS volume size for each broker | `any` | n/a | yes |
+| <a name="input_deletion_protection"></a> [deletion\_protection](#input\_deletion\_protection) | Indicates whether deletion protection should be enabled.<br/><br/>Note:<br/>Due to the AWS provider version being old, this module always enforces protection using `prevent_destroy`, which cannot be dynamically toggled.<br/><br/>To destroy the cluster:<br/>1. Temporarily remove or comment out the lifecycle block<br/>2. Run terraform apply | `bool` | `true` | no |
+153d143| <a name="input_ebs_volume_size"></a> [ebs\_volume\_size](#input\_ebs\_volume\_size) | The MSK cluster EBS volume size for each broker | `any` | n/a | yes |
 | <a name="input_email_addresses"></a> [email\_addresses](#input\_email\_addresses) | A list of email addresses for key rotation notifications. | `list(string)` | `[]` | no |
 | <a name="input_enable_kms_key_rotation"></a> [enable\_kms\_key\_rotation](#input\_enable\_kms\_key\_rotation) | Enable automatic rotation of the MSK KMS key | `bool` | `false` | no |
 | <a name="input_encryption_at_rest_kms_key_arn"></a> [encryption\_at\_rest\_kms\_key\_arn](#input\_encryption\_at\_rest\_kms\_key\_arn) | Use to set custom KMS key to encrypt data written to EBS volume | `any` | `null` | no |
