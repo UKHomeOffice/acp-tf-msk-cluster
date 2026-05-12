@@ -189,7 +189,9 @@ variable "storage_mode" {
 }
 
 variable "deletion_protection" {
-  description = "Indicates whether deletion protection should be enabled.
+  description = 
+  <<EOF
+  Indicates whether deletion protection should be enabled.
 
   Note:
   Due to the AWS provider version being old, this module always enforces protection using `prevent_destroy`, which cannot be dynamically toggled.
@@ -197,6 +199,9 @@ variable "deletion_protection" {
   To destroy the cluster:
   1. Temporarily remove or comment out the lifecycle block
   2. Run terraform apply
+  3. Then run terraform destroy
+  EOF
+
   type        = bool
   default     = true
 }
