@@ -198,7 +198,6 @@ Due to the AWS provider version being old, this module always enforces protectio
 To destroy the cluster:
 1. Temporarily remove or comment out the lifecycle block
 2. Run terraform apply
-3. Then run terraform destroy
 EOF
 
   type    = bool
