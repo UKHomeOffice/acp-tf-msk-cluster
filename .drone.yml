@@ -12,6 +12,9 @@ steps:
   pull: always
   image: quay.io/ukhomeofficedigital/terraform-toolset:v1.12.2
   commands:
+  - terraform version
+  - terraform init -upgrade
+  - terraform validate
   - /acp/scripts/tf-validate.sh
   when:
     event:
