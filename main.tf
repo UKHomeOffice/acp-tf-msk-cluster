@@ -133,7 +133,7 @@ resource "aws_msk_cluster" "msk_kafka" {
 
   lifecycle {
     # TODO: Replace with AWS native deletion_protection when provider is upgraded
-    prevent_destroy = true
+    prevent_destroy = var.prevent_destroy
 
     ignore_changes = [
       client_authentication["sasl"],
@@ -226,7 +226,7 @@ resource "aws_msk_cluster" "msk_kafka_with_config" {
 
   lifecycle {
     # TODO: Replace with AWS native deletion_protection when provider is upgraded
-    prevent_destroy = true
+    prevent_destroy = var.prevent_destroy
 
     ignore_changes = [
       client_authentication["sasl"],
