@@ -80,6 +80,18 @@ resource "aws_security_group" "sg_msk" {
     cidr_blocks = var.cidr_blocks
   }
 
+  # Optional additional plaintext ports (e.g. ZooKeeper 2181 / Kafka 9092) allowed
+  # from the same cidr_blocks as the TLS ports. Empty by default (clusters stay TLS-only).
+  dynamic "ingress" {
+    for_each = toset(var.additional_ingress_ports)
+    content {
+      from_port   = ingress.value
+      to_port     = ingress.value
+      protocol    = "tcp"
+      cidr_blocks = var.cidr_blocks
+    }
+  }
+
   tags = merge(
     var.tags,
     {
