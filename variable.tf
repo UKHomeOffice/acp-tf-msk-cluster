@@ -38,6 +38,12 @@ variable "cidr_blocks" {
   default     = ["0.0.0.0/0"]
 }
 
+variable "additional_ingress_ports" {
+  description = "Extra TCP ports to allow ingress on from cidr_blocks (e.g. plaintext ZooKeeper 2181 / Kafka 9092). Defaults to none. the cluster is TLS-only (2182/9094) unless ports are added here."
+  type        = list(number)
+  default     = []
+}
+
 variable "certificateauthority" {
   description = "Should a CA be created with the MSK cluster?"
   default     = false

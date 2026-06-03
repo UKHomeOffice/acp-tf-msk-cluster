@@ -6,6 +6,8 @@ This means that from module v1.8.0 onwards the **minimum supported Kafka version
 
 Should you require an older version of Kafka than you should use module version v1.7.x. However, the downside is that plaintext ports will be allowed on the older module version.
 
+If a specific plaintext port is still required on a current module version (e.g. a legacy client connecting to ZooKeeper on plaintext 2181), add it via the `additional_ingress_ports` variable. It is empty by default so clusters remain TLS-only (2182/9094) unless ports are explicitly listed.
+
 <!-- BEGIN_TF_DOCS -->
 ## Usage
 
@@ -108,6 +110,7 @@ module "msk_cluster_with_config" {
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_acmpca_iam_user_name"></a> [acmpca\_iam\_user\_name](#input\_acmpca\_iam\_user\_name) | The name of the IAM user assigned to the created AWS Private CA | `string` | `""` | no |
+| <a name="input_additional_ingress_ports"></a> [additional\_ingress\_ports](#input\_additional\_ingress\_ports) | Extra TCP ports to allow ingress on from cidr\_blocks (e.g. plaintext ZooKeeper 2181 / Kafka 9092). Defaults to none. the cluster is TLS-only (2182/9094) unless ports are added here. | `list(number)` | `[]` | no |
 | <a name="input_ca_arn"></a> [ca\_arn](#input\_ca\_arn) | ARN of the AWS managed CA to attach to the MSK cluster | `list(string)` | `[]` | no |
 | <a name="input_certificateauthority"></a> [certificateauthority](#input\_certificateauthority) | Should a CA be created with the MSK cluster? | `bool` | `false` | no |
 | <a name="input_cidr_blocks"></a> [cidr\_blocks](#input\_cidr\_blocks) | The CIDR blocks that the MSK cluster allows ingress connections from | `list(string)` | <pre>[<br/>  "0.0.0.0/0"<br/>]</pre> | no |
