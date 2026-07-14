@@ -38,6 +38,12 @@ variable "cidr_blocks" {
   default     = ["0.0.0.0/0"]
 }
 
+variable "additional_ingress_ports" {
+  description = "Extra TCP ports to allow ingress on from cidr_blocks (e.g. plaintext ZooKeeper 2181 / Kafka 9092). Defaults to none. the cluster is TLS-only (2182/9094) unless ports are added here."
+  type        = list(number)
+  default     = []
+}
+
 variable "certificateauthority" {
   description = "Should a CA be created with the MSK cluster?"
   default     = false
@@ -179,8 +185,28 @@ variable "enable_kms_key_rotation" {
 }
 
 variable "storage_mode" {
-  description = "Specify the storage mode for MSK brokers. Valid values: LOCAL (default) or TIERED."
+  description = "Specify the storage mode for MSK brokers. Valid values: LOCAL (default) or TIERED. TIERED requires Kafka version 3.6.0 or higher and cannot be reverted to LOCAL once enabled."
   type        = string
   default     = "LOCAL"
+  validation {
+    condition     = contains(["LOCAL", "TIERED"], var.storage_mode)
+    error_message = "storage_mode must be either LOCAL or TIERED."
+  }
+}
+
+variable "deletion_protection" {
+  description = <<EOF
+Indicates whether deletion protection should be enabled.
+
+Note:
+Due to the AWS provider version being old, this module always enforces protection using `prevent_destroy`, which cannot be dynamically toggled.
+
+To destroy the cluster:
+1. Temporarily remove or comment out the lifecycle block
+2. Run terraform apply
+EOF
+
+  type    = bool
+  default = true
 }
  

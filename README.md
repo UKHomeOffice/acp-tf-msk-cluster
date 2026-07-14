@@ -6,6 +6,8 @@ This means that from module v1.8.0 onwards the **minimum supported Kafka version
 
 Should you require an older version of Kafka than you should use module version v1.7.x. However, the downside is that plaintext ports will be allowed on the older module version.
 
+If a specific plaintext port is still required on a current module version (e.g. a legacy client connecting to ZooKeeper on plaintext 2181), add it via the `additional_ingress_ports` variable. It is empty by default so clusters remain TLS-only (2182/9094) unless ports are explicitly listed.
+
 <!-- BEGIN_TF_DOCS -->
 ## Usage
 
@@ -61,7 +63,7 @@ module "msk_cluster_with_config" {
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.2 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~>4.40 |
 
 ## Providers
@@ -108,15 +110,17 @@ module "msk_cluster_with_config" {
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_acmpca_iam_user_name"></a> [acmpca\_iam\_user\_name](#input\_acmpca\_iam\_user\_name) | The name of the IAM user assigned to the created AWS Private CA | `string` | `""` | no |
+| <a name="input_additional_ingress_ports"></a> [additional\_ingress\_ports](#input\_additional\_ingress\_ports) | Extra TCP ports to allow ingress on from cidr\_blocks (e.g. plaintext ZooKeeper 2181 / Kafka 9092). Defaults to none. the cluster is TLS-only (2182/9094) unless ports are added here. | `list(number)` | `[]` | no |
 | <a name="input_ca_arn"></a> [ca\_arn](#input\_ca\_arn) | ARN of the AWS managed CA to attach to the MSK cluster | `list(string)` | `[]` | no |
 | <a name="input_certificateauthority"></a> [certificateauthority](#input\_certificateauthority) | Should a CA be created with the MSK cluster? | `bool` | `false` | no |
-| <a name="input_cidr_blocks"></a> [cidr\_blocks](#input\_cidr\_blocks) | The CIDR blocks that the MSK cluster allows ingress connections from | `list(string)` | <pre>[<br>  "0.0.0.0/0"<br>]</pre> | no |
+| <a name="input_cidr_blocks"></a> [cidr\_blocks](#input\_cidr\_blocks) | The CIDR blocks that the MSK cluster allows ingress connections from | `list(string)` | <pre>[<br/>  "0.0.0.0/0"<br/>]</pre> | no |
 | <a name="input_config_arn"></a> [config\_arn](#input\_config\_arn) | ARN of the MSK configuration to attach to the MSK cluster | `string` | `""` | no |
 | <a name="input_config_description"></a> [config\_description](#input\_config\_description) | The description of the MSK configuration | `string` | `""` | no |
 | <a name="input_config_kafka_versions"></a> [config\_kafka\_versions](#input\_config\_kafka\_versions) | A list of Kafka versions that the configuration supports | `list(string)` | `[]` | no |
 | <a name="input_config_name"></a> [config\_name](#input\_config\_name) | Name of the MSK configuration to attach to the MSK cluster | `string` | `""` | no |
 | <a name="input_config_revision"></a> [config\_revision](#input\_config\_revision) | The revision of the MSK configuration to use | `string` | `""` | no |
 | <a name="input_config_server_properties"></a> [config\_server\_properties](#input\_config\_server\_properties) | The properties to set on the MSK cluster. Omitted properties are set to a default value | `string` | `""` | no |
+| <a name="input_deletion_protection"></a> [deletion\_protection](#input\_deletion\_protection) | Indicates whether deletion protection should be enabled.<br/><br/>Note:<br/>Due to the AWS provider version being old, this module always enforces protection using `prevent_destroy`, which cannot be dynamically toggled.<br/><br/>To destroy the cluster:<br/>1. Temporarily remove or comment out the lifecycle block<br/>2. Run terraform apply | `bool` | `true` | no |
 | <a name="input_ebs_volume_size"></a> [ebs\_volume\_size](#input\_ebs\_volume\_size) | The MSK cluster EBS volume size for each broker | `any` | n/a | yes |
 | <a name="input_email_addresses"></a> [email\_addresses](#input\_email\_addresses) | A list of email addresses for key rotation notifications. | `list(string)` | `[]` | no |
 | <a name="input_enable_kms_key_rotation"></a> [enable\_kms\_key\_rotation](#input\_enable\_kms\_key\_rotation) | Enable automatic rotation of the MSK KMS key | `bool` | `false` | no |
@@ -126,7 +130,7 @@ module "msk_cluster_with_config" {
 | <a name="input_iam_authentication"></a> [iam\_authentication](#input\_iam\_authentication) | Enables IAM client authentication | `bool` | `false` | no |
 | <a name="input_kafka_version"></a> [kafka\_version](#input\_kafka\_version) | The Kafka version for the AWS MSK cluster | `string` | `"2.2.1"` | no |
 | <a name="input_key_rotation"></a> [key\_rotation](#input\_key\_rotation) | Enable email notifications for old IAM keys. | `string` | `"true"` | no |
-| <a name="input_logging_broker_s3"></a> [logging\_broker\_s3](#input\_logging\_broker\_s3) | Configuration block for Broker Logs settings for s3. | <pre>object({<br>    enabled = bool<br>    bucket  = string<br>    prefix  = string<br>  })</pre> | `null` | no |
+| <a name="input_logging_broker_s3"></a> [logging\_broker\_s3](#input\_logging\_broker\_s3) | Configuration block for Broker Logs settings for s3. | <pre>object({<br/>    enabled = bool<br/>    bucket  = string<br/>    prefix  = string<br/>  })</pre> | `null` | no |
 | <a name="input_msk_instance_type"></a> [msk\_instance\_type](#input\_msk\_instance\_type) | The MSK cluster instance type | `any` | n/a | yes |
 | <a name="input_name"></a> [name](#input\_name) | Name of the MSK cluster | `any` | n/a | yes |
 | <a name="input_number_of_broker_nodes"></a> [number\_of\_broker\_nodes](#input\_number\_of\_broker\_nodes) | The number of broker nodes running in the MSK cluster | `any` | n/a | yes |
@@ -134,7 +138,7 @@ module "msk_cluster_with_config" {
 | <a name="input_prometheus_node_exporter_enabled"></a> [prometheus\_node\_exporter\_enabled](#input\_prometheus\_node\_exporter\_enabled) | Enable Prometheus open monitoring for the node exporter | `bool` | `false` | no |
 | <a name="input_storage_autoscaling_max_capacity"></a> [storage\_autoscaling\_max\_capacity](#input\_storage\_autoscaling\_max\_capacity) | The MSK cluster EBS maximum volume size for each broker. Value between 1 and 16384. | `number` | `1` | no |
 | <a name="input_storage_autoscaling_threshold"></a> [storage\_autoscaling\_threshold](#input\_storage\_autoscaling\_threshold) | The percentage threshold that needs to be exceeded to trigger a scale up. Value between 10 and 80. | `number` | `65` | no |
-| <a name="input_storage_mode"></a> [storage\_mode](#input\_storage\_mode) | Specify the storage mode for MSK brokers. Valid values: LOCAL (default) or TIERED. | `string` | `"LOCAL"` | no |
+| <a name="input_storage_mode"></a> [storage\_mode](#input\_storage\_mode) | Specify the storage mode for MSK brokers. Valid values: LOCAL (default) or TIERED. TIERED requires Kafka version 3.6.0 or higher and cannot be reverted to LOCAL once enabled. | `string` | `"LOCAL"` | no |
 | <a name="input_subnet_ids"></a> [subnet\_ids](#input\_subnet\_ids) | A list of subnets that the MSK cluster should run in | `list(string)` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | A map of tags to add to all resources | `map(string)` | `{}` | no |
 | <a name="input_type"></a> [type](#input\_type) | The type of the certificate authority | `string` | `""` | no |
