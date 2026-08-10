@@ -1,4 +1,3 @@
----
 kind: pipeline
 name: default
 type: kubernetes
@@ -8,14 +7,24 @@ platform:
   arch: amd64
 
 steps:
+- name: show-doc-diff
+  pull: always
+  image: quay.io/ukhomeofficedigital/terraform-toolset:v1.12.2
+  commands:
+    - terraform-docs md . > /tmp/generated.md
+    - echo "===== README.md ====="
+    - cat README.md
+    - echo "===== GENERATED ====="
+    - cat /tmp/generated.md
+    - echo "===== DIFF ====="
+    - diff -u README.md /tmp/generated.md || true
+
 - name: validate
   pull: always
   image: quay.io/ukhomeofficedigital/terraform-toolset:v1.12.2
   commands:
-  - /acp/scripts/tf-validate.sh
+    - /acp/scripts/tf-validate.sh
   when:
     event:
-    - pull_request
-    - push
-
-...
+      - pull_request
+      - push
