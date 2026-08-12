@@ -108,7 +108,7 @@ module "msk_cluster_with_config" {
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|------|---------|-:--------:-|
+|------|-------------|------|---------|:--------:|
 | <a name="input_acmpca_iam_user_name"></a> [acmpca\_iam\_user\_name](#input\_acmpca\_iam\_user\_name) | The name of the IAM user assigned to the created AWS Private CA | `string` | `""` | no |
 | <a name="input_additional_ingress_ports"></a> [additional\_ingress\_ports](#input\_additional\_ingress\_ports) | Extra TCP ports to allow ingress on from cidr\_blocks (e.g. plaintext ZooKeeper 2181 / Kafka 9092). Defaults to none. the cluster is TLS-only (2182/9094) unless ports are added here. | `list(number)` | `[]` | no |
 | <a name="input_ca_arn"></a> [ca\_arn](#input\_ca\_arn) | ARN of the AWS managed CA to attach to the MSK cluster | `list(string)` | `[]` | no |
