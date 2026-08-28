@@ -210,3 +210,8 @@ EOF
   default = true
 }
  
+variable "prevent_destroy" {
+  description = "MSK cluster deletion protection"
+  type        = bool
+  default     = false
+}
